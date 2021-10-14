@@ -1,4 +1,5 @@
 Link: https://arxiv.org/pdf/1910.00093.pdf
+Link: https://www.arxiv-vanity.com/papers/1910.00093/
 
 ## An Open Torque-Controlled Modular Robot Architecture for Legged Locomotion Research
 
