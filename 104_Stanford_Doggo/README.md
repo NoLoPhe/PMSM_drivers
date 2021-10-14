@@ -21,7 +21,7 @@ This paper presents Stanford Doggo (Fig. 1), a QDD quadruped that matches or exc
 
 ## II. METHODS
 
-## A. Design
+### A. Design
 
 In order to allow others to replicate Stanford Doggo we made the design open-source [20]. The project repository includes all CAD files, a detailed bill of materials, general assembly instructions, wiring schematics, and all necessary software. The total cost estimated to build Stanford Doggo is $3000. This includes estimated costs to have outsourced machining services perform any manufacturing beyond those possible with hand tools, such as a hand drill or soldering iron. In order to increase accessibility, all components and quoted machining services are available online. The overall dimensions of the Stanford Doggo chassis are 42cm in length, 20cm in width, and 14cm in height. The minimum and maximum leg extensions, measured from the foot to the center of rotation are 8cm and 25cm, respectively.
 
@@ -33,13 +33,13 @@ The electrical system of Stanford Doggo consists of a microcontroller, four leg 
 
 Stanford Doggo achieves walking, trotting, bounding, and pronking gaits by commanding sinusoidal open-loop trajectories to the four motor controllers. Minitaur was able to generate stable gaits using a similar open-loop trajectory method [22]. The leg trajectories used on Stanford Doggo are composed of two halves of sinusoidal curves for the flight and stance phases shown in orange and purple in Fig. 5. The geometric parameters of the sinusoids, the virtual leg compliance, and the duration of time that the leg spends traversing each sinusoidal segment, were varied to create different gaits. These trajectories are converted to a desired leg angle (θ) and a desired link separation (γ) that describe the virtual leg that originates at the hip joint of the leg and terminates at the foot. These virtual leg parameters and their corresponding stiffness and damping coefficients are sent from the microcontroller to the motor controllers. The motor controllers use PD control to generate output torques to achieve the desired leg angle and separation. These generalized torques are converted to motor torques by using the relationship with the kinematic leg Jacobian. The proportional term of the controller adds virtual stiffness and the derivative term adds virtual damping. Taken together, the two terms create a virtually compliant system.
 
-B. Transmission Principles
+### B. Transmission Principles
 
 The design of Stanford Doggo’s QDD transmission was informed by the scaling laws for actuator torque, transparency, and weight. For a QDD transmission to be advantageous over a direct-drive design, the QDD device should increase the output torque while keeping the additional mass small enough such that a larger motor would not provide the same benefit. Similarly, the reflected inertia introduced by the QDD transmission should be kept low enough to maintain sensitive proprioception.
 
 Taking these criteria into account, a threshold mass can be calculated for the QDD transmission to be beneficial over a direct-drive design. If an electromagnet motor’s radius (r) is scaled, motor mass is ∝ r assuming that the mass is concentrated near the air-gap of the motor. Additionally, torque is ∝ r2, and reflected inertia is ∝ r3 [23]. For a QDD transmission with a speed reduction of N:1, the torque multiplier is ∝ N. The output torque can either be increased by choosing a larger motor or by using a higher reduction. A larger motor that increases the gap radius by a factor of √ N would achieve approximately the same output torque as a QDD transmission with a speed reduction of ratio N:1, while also multiplying the motor mass by a factor of √ N. The QDD transmission mass should thus be less than ( √ N−1)m, where m is the motor mass, in order to save mass compared to a larger motor that produces the same torque. In practice, this mass criteria can be met by various QDD designs, but may reduce the control bandwidth, efficiency, and reliability of the system. In terms of transparency, which is important to sensitive force production and compliance, reflected inertia is invariant to the choice of QDD or DD [4]. However, transparency is still negatively affected as N increases due to dynamics in the transmission. These trade-offs should be considered for the specific application.
 
-C. Performance Metrics
+### C. Performance Metrics
 
 Stanford Doggo’s transmission and motor were characterized with a number of metrics to understand the tradeoffs between cost, torque, mass of the motor plus transmission, power, and reflected inertia. The maximum continuous torque was measured by attaching a lever arm to the motor, placing a scale under the opposite end of the lever arm, and commanding the motor to exert force against the scale. Motor current was then gradually increased until the motor reached a steady state temperature of 125◦C, a value often used as the maximum permissible temperature of stator windings [24]. During the experiment the ambient temperature was 22◦C and no cooling was applied to the motor. Once the maximum continuous current was determined, the force against the scale was multiplied by the link length and by the transmission speed reduction ratio to find the maximum continuous torque at the output. The peak torque was measured using the same experimental setup and was based on the peak force exerted over a one second duration. The reflected inertia of the motor was estimated numerically by using a computer-aided-design model of the motor’s rotor. This inertia value was then multiplied by the square of the speed reduction ratio to find the reflected inertia. The torque density, which is the ratio of peak motor torque to motor mass, was analyzed to understand the robot’s ability to exert force, one of the limiting resources on a legged robot.
 
@@ -64,7 +64,7 @@ The peak vertical jump height is measured as the maximum vertical height achieve
 
 Vertical jumping agility quantifies how quickly an animal can change its energetic state and approximates the speed at which a system could climb vertically through a series of jumps [13], [5]. Vertical jumping agility is computed as the peak vertical jump height divided by the combined time in stance and time to the apogee. The time in stance is defined as the time taken from the initiation of actuation starting the jump to the instant the feet leave the ground. The time to the apogee is the recorded from when the feet leave the ground until the apogee of the jump, where the vertical velocity is zero.
 
-III. RESULTS
+## III. RESULTS
 
 Careful consideration was given to the actuator and transmission selection which determined the trade-off between torque, transparency, and mass. A comparison with the Minitaur’s actuator (Table I) shows that the Stanford Doggo’s actuator has a 37% higher peak force and a 76% higher continuous torque at the cost of an 8% increase in total mass and three times increase in inertia. The total cost of the actuator is also significantly less than the cost of the Minitaur actuator. The MIT Cheetah 2 uses a QDD transmission with a mass roughly equal to the motor and a torque density of 58 Nm kg [25]. In comparison, the mass of the Stanford Doggo belt drive assembly is 27% of the motor mass and the mechanism has a torque density of 17.8 Nm kg.
 
@@ -74,7 +74,7 @@ The degrees of freedom and leg lengths closely match among many of the compared 
 
 Stanford Doggo performs adequately in terms of steady velocity and cost of transport in comparison to the other robots (Table III). Salto-1P had a cost of transport roughly twice as large as Stanford Doggo at a four times higher steady velocity. Stanford Doggo achieved the highest jump of any other quadruped by more than two times. The Salto1P’s jump was only 0.11m more than Stanford Doggo, despite being a specialized monopod. Stanford Doggo reported the highest vertical jumping agility among all robots and matched the performance of the galago, the animal with highest known vertical jumping agility [16]. MIT Cheetah 3 produces significantly larger force per weight than MIT Cheetah 2, indicating potential for fast steady velocity and large maximum jump height, but few performance details have been published [26].
 
-IV. DISCUSSION
+## IV. DISCUSSION
 
 The Stanford Doggo actuator uses a QDD mechanism to increase the output torque by a factor of 3. Following the actuator scaling laws, a DD actuator with same output torque would be 73% heavier than the motor in the QDD mechanism. The approximate mass reduction using the QDD totals 770g, or 16% of the total robot mass. Compared to the Minitaur actuator, the Stanford Doggo actuator has 2.7 times the reflected inertia of the Minitaur actuator, yet provides 1.8 times more continuous torque with similar mass [4]. Again following the scaling laws for increasing the gap radius of a DD actuator, attaining a 1.8 times greater torque would require approximately a 1.3 times larger gap radius, which would increase the motor inertia by a factor of 2.4. However, a 1.3 times larger gap radius would increase the motor mass by the same factor of 1.3, which would make the DD actuator 20% heavier than the Stanford Doggo’s QDD actuator.
 
@@ -86,15 +86,15 @@ The cost of transport of Stanford Doggo is higher than the Minitaur, which is to
 
 Stanford Doggo’s vertical jumping agility outperforms all legged robots and highlights the benefits of the increased peak torque in comparison to the Minitaur actuator (Table III). While the MIT Cheetah 2 reported a higher torque density than Stanford Doggo, the increase did not result in a higher vertical jumping agility. Three factors contribute to Stanford Doggo’s high vertical jumping agility compared to the MIT Cheetah 2. First, the smaller leg length on Stanford Doggo means that the joint torque acts over a shorter lever arm, which increases the force output at the end of the linkage. Second, the lightweight belt drive transmission in comparison to MIT Cheetah 2’s planetary gears system significantly reduces the total mass of the robot [2]. Finally, Stanford Doggo uses a parallel linkage, which, with joint torques and size kept equal, produces a greater maximum foot force than a similarly sized serial linkage because the torques sum together. The high vertical jumping agility of Stanford Doggo shows the potential of Stanford Doggo to perform extremely dynamic maneuvers.
 
-V. CONCLUSION
+## V. CONCLUSION
 
 In this work we introduce Stanford Doggo, a robot that merges the dexterity and inherent stability of quadruped robots with a vertical jumping agility greater than specialized monopods and matching that of the highest performing animal, the galago. Stanford Doggo also meets or exceeds stateof-the-art legged robotic systems in a number of common performance metrics. The complete design is open-source with a focus on low manufacturing cost, less than $3000, and requires only hand tools for assembly [20]. In making an accessible, state-of-the-art legged robot platform, we hope to improve research and education in legged robotics by lowering the barriers to entry. We plan to continue the opensource development to improve the design and closed-loop gait controllers. In the future, we intend to explore additional control schemes to fully utilize Stanford Doggo’s extreme mobility.
 
-VI. ACKNOWLEDGEMENTS
+## VI. ACKNOWLEDGEMENTS
 
 The authors would like to thank Ademi Adeniji, Brian Zeng, James Wang, and Meera Radhakrishnan for supporting the development of Stanford Doggo.
 
-REFERENCES
+## REFERENCES
 
 [1] Alireza Ramezani, Jonathan W Hurst, Kaveh Akbari Hamed, and Jessy W Grizzle. Performance analysis and feedback control of ATRIAS, a three-dimensional bipedal robot. Journal of Dynamic Systems, Measurement, and Control, 136(2), 2014.
 
