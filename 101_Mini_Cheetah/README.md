@@ -139,21 +139,39 @@ Mini Cheetah is a new lightweight, low-cost quadruped robot, featuring similar d
 ## REFERENCES
 
 [1] W. Bosworth, S. Kim, and N. Hogan, “The mit super mini cheetah: A small, low-cost quadrupedal robot for dynamic locomotion,” pp. 1–8, Oct 2015.
+
 [2] G. Kenneally, A. De, and D. E. Koditschek, “Design principles for a family of direct-drive legged robots,” IEEE Robotics and Automation Letters, vol. 1, pp. 900–907, July 2016.
+
 [3] A. Sprowitz, A. Tuleu, M. Vespignani, M. Ajallooeian, E. Badri, and A. J. Ijspeert, “Towards dynamic trot gait locomotion: Design, control, and experiments with cheetah-cub, a compliant quadruped robot,” The International Journal of Robotics Research, vol. 32, no. 8, pp. 932–950, 2013.
+
 [4] M. P. Murphy, A. Saunders, C. Moreira, A. A. Rizzi, and M. Raibert, “The littledog robot,” The International Journal of Robotics Research, vol. 30, no. 2, pp. 145–149, 2011.
+
 [5] G. Bledt, M. J. Powell, B. Katz, J. D. Carlo, P. M. Wensing, and S. Kim, “Mit cheetah 3: Design and control of a robust, dynamic quadruped robot,” 2018 IEEE International Conference on Intelligent and Robots (IROS), 2018.
+
 [6] M. Hutter, C. Gehring, D. Jud, A. Lauber, C. D. Bellicoso, V. Tsounis, J. Hwangbo, K. Bodie, P. Fankhauser, M. Bloesch, R. Diethelm, S. Bachmann, A. Melzer, and M. Hoepflinger, “ANYmal - a highly mobile and dynamic quadrupedal robot,” in IEEE/RSJ International Conference on Intelligent Robots and Systems, pp. 38–44, Oct 2016.
+
 [7] A. S. Huang, E. Olson, and D. C. Moore, “Lcm: Lightweight communications and marshalling,” in IEEE/RSJ International Conference on Intelligent Robots and Systems, pp. 4057–4062, Oct 2010.
+
 [8] S. Seok, A. Wang, M. Chuah, D. J. Hyun, J. Lee, D. Otten, J. Lang, and S. Kim, “Design principles for energy-efficient legged locomotion and implementation on the mit cheetah robot,” Mechatronics, IEEE/ASME Transactions on, vol. 20, pp. 1117–1129, June 2015.
+
 [9] J. Ramos, B. Katz, M. Y. Chuah, and S. Kim, “Facilitating modelbased control through software-hardware co-design,” 2018 IEEE International Conference on Robotics and Automation (ICRA), 2018.
+
 [10] G. A. Pratt and M. M. Williamson, “Series elastic actuators,” in Proceedings 1995 IEEE/RSJ International Conference on Intelligent Robots and Systems. Human Robot Interaction and Cooperative Robots, vol. 1, pp. 399–406 vol.1, Aug 1995.
+
 [11] P. M. Wensing, A. Wang, S. Seok, D. Otten, J. Lang, and S. Kim, “Proprioceptive actuator design in the MIT Cheetah: Impact mitigation and high-bandwidth physical interaction for dynamic legged robots,” IEEE Transactions on Robotics, vol. 33, no. 3, pp. 509–522, 2017.
+
 [12] N. Paine, J. Mehling, J. Holley, N. A. Radford, G. Johnson, C.-L. Fok, and L. Sentis, “Actuator control for the nasa-jsc valkyrie humanoid robot: A decoupled dynamics approach for torque control of series elastic robots,” J. Field Robotics, vol. 32, pp. 378–396, 2015.
+
 [13] J. DiCarlo, P. M. Wensing, B. Katz, G. Bledt, and S. Kim, “Dynamic locomotion in the MIT Cheetah 3 through convex model predictive control.” IROS 2018.
+
 [14] “MIT Mini Cheetah.” https://youtu.be/xs7UJoPRVr0, 2019. [Online; accessed 25-2-2019].
+
 [15] M. H. Raibert, Legged robots that balance. Cambridge, MA, USA: MIT Press, 1986.
+
 [16] R. Playter and M. Raibert, “Control of a biped somersault in 3D,” in Proc. of the IEEE/RSJ Int. Conf. on Intelligent Robots and Systems, vol. 1, pp. 582–589, July 1992.
+
 [17] “What’s New, Atlas?.” https://youtu.be/fRj34o4hN4I, 2017. [Online; accessed 9-4-2018].
+
 [18] J. A. E. Andersson, J. Gillis, G. Horn, J. B. Rawlings, and M. Diehl, “CasADi – A software framework for nonlinear optimization and optimal control,” Mathematical Programming Computation, In Press, 2018.
+
 [19] A. Wachter and L. T. Biegler, “On the implementation of an interior- point filter line-search algorithm for large-scale nonlinear programming,” Mathematical Programming, vol. 106, pp. 25–57, Mar 2006.
