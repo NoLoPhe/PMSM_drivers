@@ -16,3 +16,4 @@ list of open source robotics
 |:-|:-|:-|
 |101|Mini-Cheetah|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/master/101_Mini_Cheetah)|
 |102|Solo-8|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/master/102_Solo_8)|
+|103|Stanford-Pupper|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/master/103_Stanford_Pupper)|
