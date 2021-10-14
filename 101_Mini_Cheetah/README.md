@@ -1,4 +1,5 @@
 Link: https://ieeexplore.ieee.org/abstract/document/8793865
+Link: https://sci-hub.mksa.top/10.1109/ICRA.2019.8793865
 
 # Mini Cheetah: A Platform for Pushing the Limits of Dynamic Quadruped Control
 
