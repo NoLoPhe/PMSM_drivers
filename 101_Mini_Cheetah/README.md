@@ -113,150 +113,47 @@ For experiments so far, the gait timing has been fixed, and foot placement locat
 
 The first controller implemented on the Mini Cheetah was a back-flipping controller. To our knowledge, this is the first example of a quadruped robot doing a 360◦ flip, although the 2D and 3D Biped robots from the MIT Leg Lab and the biped Atlas from Boston Dynamics have done a somersault [16] and a backflip off a raised platform [17], respectively. While not inherently useful, flipping served as an excellent stress-test of the robot platform, involving high peak torques and powers and high impact speeds upon landing.
 
-1) Backflip Trajectory Optimization: To generate a backflip trajectory, we used the open-source CasADi library [18] to set up a trajectory optimization problem to be solved by IPOPT [19]. The optimization was done on a 5-link sagittal plane model of the robot, which included five rigid links, as well as the effects of the rotors of the actuators. The 2D model was significantly faster than our full 3-D optimization, and captured the relevant dynamics for a backflip. We found it was not necessary to specify a nonzero cost function; simply allowing the optimization to find a feasible backflip given our constraints was sufficient. Some of the constraints in addition to the dynamics used in the optimization were:
+**1. Backflip Trajectory Optimization:** To generate a backflip trajectory, we used the open-source CasADi library [18] to set up a trajectory optimization problem to be solved by IPOPT [19]. The optimization was done on a 5-link sagittal plane model of the robot, which included five rigid links, as well as the effects of the rotors of the actuators. The 2D model was significantly faster than our full 3-D optimization, and captured the relevant dynamics for a backflip. We found it was not necessary to specify a nonzero cost function; simply allowing the optimization to find a feasible backflip given our constraints was sufficient. Some of the constraints in addition to the dynamics used in the optimization were:
 
-  • Initial and final position and velocity: The robot starts in a configuration close to the ground, so the full workspace of the legs can be used, and with zero velocity. The landing configuration has the legs more extended, so they can absorb the impact. The ending orientation of the body was set to around −1.9π radians.
+  - Initial and final position and velocity: The robot starts in a configuration close to the ground, so the full workspace of the legs can be used, and with zero velocity. The landing configuration has the legs more extended, so they can absorb the impact. The ending orientation of the body was set to around −1.9π radians.
+  - Fixed contact sequence between the feet and the ground: i.e. the takeoff timing of the front and back pairs of legs was fixed.
+  - All points on the robot should remain above the ground.
+  - The front and back legs should not intersect.
+  - Ground reaction forces must be in a friction cone: |fx| ≤ µfz.
+  - Absolute and speed-dependent actuator torque limits from current and voltage limits.
 
-• Fixed contact sequence between the feet and the
-ground: i.e. the takeoff timing of the front and back
-pairs of legs was fixed
+The problem was set up as direct transcription and included 80 time steps, with a .01 integration time step, which resulted in around optimization 2000 variables (the states and control inputs at each time step) and 4000 constraints. The optimization can be easily set up to generate many different dynamic behaviors. With different sets of constraints, we have been able to (in simulation) jump while yawing in 3D, jump up onto and down from a platform, and backflip over a 30 cm wall.
 
-• All points on the robot should remain above the ground
-• The front and back legs should not intersect
-• Ground reaction forces must be in a friction cone:
-|fx| ≤ µfz
-• Absolute and speed-dependent actuator torque limits
-from current and voltage limits
+**2. Backflip Control:** Whereas the 3D biped was able to adjust its angular velocity mid-air by changing its moment of inertia, in order to land in the correct orientation, such a controller was not possible with the Mini Cheetah: The robot’s moment of inertia about its pitch axis negligibly changes as the legs extend and retract, so it is not possible for the robot to significantly change its angular velocity during flight. Sticking the landing instead required accurate takeoff height and angular velocity. As the robot pitches at a rate of over 500 ◦s−1 while flipping, very slight errors in timing make landing impossible. Furthermore, at the time of execution, the robot’s IMU had not yet been integrated, so no feedback on body orientation was possible during the takeoff period.
 
-The problem was set up as direct transcription and included 80 time steps, with a .01 integration time step, which
-resulted in around optimization 2000 variables (the states and
-control inputs at each time step) and 4000 constraints. The
-optimization can be easily set up to generate many different
-dynamic behaviors. With different sets of constraints, we
-have been able to (in simulation) jump while yawing in 3D,
-jump up onto and down from a platform, and backflip over
-a 30 cm wall.
+The flips were executed by using the joint torques from the optimization as feed-forward joint torque commands, with PD joint feedback to track the optimized joint trajectories.
 
-2) Backflip Control: Whereas the 3D biped was able to
-adjust its angular velocity mid-air by changing its moment
-of inertia, in order to land in the correct orientation, such
-a controller was not possible with the Mini Cheetah: The
-robot’s moment of inertia about its pitch axis negligibly
-changes as the legs extend and retract, so it is not possible
-for the robot to significantly change its angular velocity
-during flight. Sticking the landing instead required accurate
-takeoff height and angular velocity. As the robot pitches at
-a rate of over 500 ◦
-s
-−1 while flipping, very slight errors in
-timing make landing impossible. Furthermore, at the time
-of execution, the robot’s IMU had not yet been integrated,
-so no feedback on body orientation was possible during the
-takeoff period.
+After some tuning of the final configuration of the legs for landing, this approach was over 90% successful on the hardware. Failures were typically due to excessive roll during the flight period, which resulted in a poor landing configuration. Rotation about the roll axis is unstable during the flip, so any non-zero roll velocity on takeoff resulted in a unfavorable landing orientation. Without body feedback, the robot was only able to stabilize around 40◦ roll upon landing. Now that the appropriate sensing and state estimation have been integrated in to the robot, we would like to revisit the flipping and landing controllers to regulate the body orientation during takeoff and landing using the cMPC or other control techniques, which should improve repeatability and robustness to varying conditions like uneven or sloped ground.
 
-The flips were executed by using the joint torques from the
-optimization as feed-forward joint torque commands, with
-PD joint feedback to track the optimized joint trajectories.
-
-After some tuning of the final configuration of the legs
-for landing, this approach was over 90% successful on
-the hardware. Failures were typically due to excessive roll
-during the flight period, which resulted in a poor landing
-configuration. Rotation about the roll axis is unstable during
-the flip, so any non-zero roll velocity on takeoff resulted in a
-unfavorable landing orientation. Without body feedback, the
-robot was only able to stabilize around 40◦
-roll upon landing.
-Now that the appropriate sensing and state estimation have
-been integrated in to the robot, we would like to revisit
-the flipping and landing controllers to regulate the body
-orientation during takeoff and landing using the cMPC or
-other control techniques, which should improve repeatability
-and robustness to varying conditions like uneven or sloped
-ground.
-
-During the flips, the robot’s COM reached a height of
-0.7 m. Joint torques and output power required for the flip
-are shown in Figure 11. Mechanical output power of the
-robot reached a peak of 690W, just before the rear legs take
-off the ground. Velocity of the rear feet just prior to impact
-reached over 7 m s−1
-- equivalent to falling from over 2.5 m.
+During the flips, the robot’s COM reached a height of 0.7 m. Joint torques and output power required for the flip are shown in Figure 11. Mechanical output power of the robot reached a peak of 690W, just before the rear legs take off the ground. Velocity of the rear feet just prior to impact reached over 7 m s−1 - equivalent to falling from over 2.5 m.
 
 V. CONCLUSIONS
 
-Mini Cheetah is a new lightweight, low-cost quadruped
-robot, featuring similar dynamic capability for its size to the
-MIT Cheetah 3 robot. It employs modular actuators, which
-were designed to simultaneously deliver high torque density,
-torque control bandwidth, and tolerance to external impacts.
-Because of its size, performance, and robustness, it enables
-rapid experimentation in hardware of highly dynamic behaviors: It has demonstrated dynamic locomotion using cMPC at
-speeds of up to 2.45 m s−1
-, turning at 4.6 rad s−1
-, and over
-0.5 G’s of linear acceleration. The robot has also performed
-backflips generated by offline trajectory optimization, which
-we believe to be a first for a quadruped robot.
+Mini Cheetah is a new lightweight, low-cost quadruped robot, featuring similar dynamic capability for its size to the MIT Cheetah 3 robot. It employs modular actuators, which were designed to simultaneously deliver high torque density, torque control bandwidth, and tolerance to external impacts. Because of its size, performance, and robustness, it enables rapid experimentation in hardware of highly dynamic behaviors: It has demonstrated dynamic locomotion using cMPC at speeds of up to 2.45 m s−1, turning at 4.6 rad s−1, and over 0.5 G’s of linear acceleration. The robot has also performed backflips generated by offline trajectory optimization, which we believe to be a first for a quadruped robot.
 
 ## REFERENCES
 
-[1] W. Bosworth, S. Kim, and N. Hogan, “The mit super mini cheetah: A
-small, low-cost quadrupedal robot for dynamic locomotion,” pp. 1–8,
-Oct 2015.
-[2] G. Kenneally, A. De, and D. E. Koditschek, “Design principles for a
-family of direct-drive legged robots,” IEEE Robotics and Automation
-Letters, vol. 1, pp. 900–907, July 2016.
-[3] A. Sprowitz, A. Tuleu, M. Vespignani, M. Ajallooeian, E. Badri, and ¨
-A. J. Ijspeert, “Towards dynamic trot gait locomotion: Design, control,
-and experiments with cheetah-cub, a compliant quadruped robot,” The
-International Journal of Robotics Research, vol. 32, no. 8, pp. 932–
-950, 2013.
-[4] M. P. Murphy, A. Saunders, C. Moreira, A. A. Rizzi, and M. Raibert,
-“The littledog robot,” The International Journal of Robotics Research,
-vol. 30, no. 2, pp. 145–149, 2011.
-[5] G. Bledt, M. J. Powell, B. Katz, J. D. Carlo, P. M. Wensing, and
-S. Kim, “Mit cheetah 3: Design and control of a robust, dynamic
-quadruped robot,” 2018 IEEE International Conference on Intelligent
-and Robots (IROS), 2018.
-[6] M. Hutter, C. Gehring, D. Jud, A. Lauber, C. D. Bellicoso, V. Tsounis,
-J. Hwangbo, K. Bodie, P. Fankhauser, M. Bloesch, R. Diethelm,
-S. Bachmann, A. Melzer, and M. Hoepflinger, “ANYmal - a highly
-mobile and dynamic quadrupedal robot,” in IEEE/RSJ International
-Conference on Intelligent Robots and Systems, pp. 38–44, Oct 2016.
-[7] A. S. Huang, E. Olson, and D. C. Moore, “Lcm: Lightweight communications and marshalling,” in IEEE/RSJ International Conference
-on Intelligent Robots and Systems, pp. 4057–4062, Oct 2010.
-[8] S. Seok, A. Wang, M. Chuah, D. J. Hyun, J. Lee, D. Otten, J. Lang,
-and S. Kim, “Design principles for energy-efficient legged locomotion and implementation on the mit cheetah robot,” Mechatronics,
-IEEE/ASME Transactions on, vol. 20, pp. 1117–1129, June 2015.
+[1] W. Bosworth, S. Kim, and N. Hogan, “The mit super mini cheetah: A small, low-cost quadrupedal robot for dynamic locomotion,” pp. 1–8, Oct 2015.
+[2] G. Kenneally, A. De, and D. E. Koditschek, “Design principles for a family of direct-drive legged robots,” IEEE Robotics and Automation Letters, vol. 1, pp. 900–907, July 2016.
+[3] A. Sprowitz, A. Tuleu, M. Vespignani, M. Ajallooeian, E. Badri, and A. J. Ijspeert, “Towards dynamic trot gait locomotion: Design, control, and experiments with cheetah-cub, a compliant quadruped robot,” The International Journal of Robotics Research, vol. 32, no. 8, pp. 932–950, 2013.
+[4] M. P. Murphy, A. Saunders, C. Moreira, A. A. Rizzi, and M. Raibert, “The littledog robot,” The International Journal of Robotics Research, vol. 30, no. 2, pp. 145–149, 2011.
+[5] G. Bledt, M. J. Powell, B. Katz, J. D. Carlo, P. M. Wensing, and S. Kim, “Mit cheetah 3: Design and control of a robust, dynamic quadruped robot,” 2018 IEEE International Conference on Intelligent and Robots (IROS), 2018.
+[6] M. Hutter, C. Gehring, D. Jud, A. Lauber, C. D. Bellicoso, V. Tsounis, J. Hwangbo, K. Bodie, P. Fankhauser, M. Bloesch, R. Diethelm, S. Bachmann, A. Melzer, and M. Hoepflinger, “ANYmal - a highly mobile and dynamic quadrupedal robot,” in IEEE/RSJ International Conference on Intelligent Robots and Systems, pp. 38–44, Oct 2016.
+[7] A. S. Huang, E. Olson, and D. C. Moore, “Lcm: Lightweight communications and marshalling,” in IEEE/RSJ International Conference on Intelligent Robots and Systems, pp. 4057–4062, Oct 2010.
+[8] S. Seok, A. Wang, M. Chuah, D. J. Hyun, J. Lee, D. Otten, J. Lang, and S. Kim, “Design principles for energy-efficient legged locomotion and implementation on the mit cheetah robot,” Mechatronics, IEEE/ASME Transactions on, vol. 20, pp. 1117–1129, June 2015.
 [9] J. Ramos, B. Katz, M. Y. Chuah, and S. Kim, “Facilitating modelbased control through software-hardware co-design,” 2018 IEEE International Conference on Robotics and Automation (ICRA), 2018.
-[10] G. A. Pratt and M. M. Williamson, “Series elastic actuators,” in
-Proceedings 1995 IEEE/RSJ International Conference on Intelligent
-Robots and Systems. Human Robot Interaction and Cooperative
-Robots, vol. 1, pp. 399–406 vol.1, Aug 1995.
-[11] P. M. Wensing, A. Wang, S. Seok, D. Otten, J. Lang, and S. Kim,
-“Proprioceptive actuator design in the MIT Cheetah: Impact mitigation
-and high-bandwidth physical interaction for dynamic legged robots,”
-IEEE Transactions on Robotics, vol. 33, no. 3, pp. 509–522, 2017.
-[12] N. Paine, J. Mehling, J. Holley, N. A. Radford, G. Johnson, C.-L. Fok,
-and L. Sentis, “Actuator control for the nasa-jsc valkyrie humanoid
-robot: A decoupled dynamics approach for torque control of series
-elastic robots,” J. Field Robotics, vol. 32, pp. 378–396, 2015.
-[13] J. DiCarlo, P. M. Wensing, B. Katz, G. Bledt, and S. Kim, “Dynamic
-locomotion in the MIT Cheetah 3 through convex model predictive
-control.” IROS 2018.
-[14] “MIT Mini Cheetah.” https://youtu.be/xs7UJoPRVr0,
-2019. [Online; accessed 25-2-2019].
-[15] M. H. Raibert, Legged robots that balance. Cambridge, MA, USA:
-MIT Press, 1986.
-[16] R. Playter and M. Raibert, “Control of a biped somersault in 3D,” in
-Proc. of the IEEE/RSJ Int. Conf. on Intelligent Robots and Systems,
-vol. 1, pp. 582–589, July 1992.
-[17] “What’s New, Atlas?.” https://youtu.be/fRj34o4hN4I,
-2017. [Online; accessed 9-4-2018].
-[18] J. A. E. Andersson, J. Gillis, G. Horn, J. B. Rawlings, and M. Diehl,
-“CasADi – A software framework for nonlinear optimization and
-optimal control,” Mathematical Programming Computation, In Press,
-2018.
-[19] A. Wachter and L. T. Biegler, “On the implementation of an interior- ¨
-point filter line-search algorithm for large-scale nonlinear programming,” Mathematical Programming, vol. 106, pp. 25–57, Mar 2006.
+[10] G. A. Pratt and M. M. Williamson, “Series elastic actuators,” in Proceedings 1995 IEEE/RSJ International Conference on Intelligent Robots and Systems. Human Robot Interaction and Cooperative Robots, vol. 1, pp. 399–406 vol.1, Aug 1995.
+[11] P. M. Wensing, A. Wang, S. Seok, D. Otten, J. Lang, and S. Kim, “Proprioceptive actuator design in the MIT Cheetah: Impact mitigation and high-bandwidth physical interaction for dynamic legged robots,” IEEE Transactions on Robotics, vol. 33, no. 3, pp. 509–522, 2017.
+[12] N. Paine, J. Mehling, J. Holley, N. A. Radford, G. Johnson, C.-L. Fok, and L. Sentis, “Actuator control for the nasa-jsc valkyrie humanoid robot: A decoupled dynamics approach for torque control of series elastic robots,” J. Field Robotics, vol. 32, pp. 378–396, 2015.
+[13] J. DiCarlo, P. M. Wensing, B. Katz, G. Bledt, and S. Kim, “Dynamic locomotion in the MIT Cheetah 3 through convex model predictive control.” IROS 2018.
+[14] “MIT Mini Cheetah.” https://youtu.be/xs7UJoPRVr0, 2019. [Online; accessed 25-2-2019].
+[15] M. H. Raibert, Legged robots that balance. Cambridge, MA, USA: MIT Press, 1986.
+[16] R. Playter and M. Raibert, “Control of a biped somersault in 3D,” in Proc. of the IEEE/RSJ Int. Conf. on Intelligent Robots and Systems, vol. 1, pp. 582–589, July 1992.
+[17] “What’s New, Atlas?.” https://youtu.be/fRj34o4hN4I, 2017. [Online; accessed 9-4-2018].
+[18] J. A. E. Andersson, J. Gillis, G. Horn, J. B. Rawlings, and M. Diehl, “CasADi – A software framework for nonlinear optimization and optimal control,” Mathematical Programming Computation, In Press, 2018.
+[19] A. Wachter and L. T. Biegler, “On the implementation of an interior- point filter line-search algorithm for large-scale nonlinear programming,” Mathematical Programming, vol. 106, pp. 25–57, Mar 2006.
