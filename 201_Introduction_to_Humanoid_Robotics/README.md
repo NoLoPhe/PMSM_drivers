@@ -1,5 +1,3 @@
-## Introduction-to-Humanoid-Robotics
-
 # Contents
 
 - 1 Introduction
