@@ -18,3 +18,8 @@ list of open source robotics
 |102|Solo-8|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/master/102_Solo_8)|
 |103|Stanford-Pupper|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/master/103_Stanford_Pupper)|
 |104|Stanford-Doggo|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/master/104_Stanford_Doggo)|
+
+list of book robotics
+|No.|Model Name|Link|
+|:-|:-|:-|
+|201|Introduction-to-Humanoid-Robotics|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/master/201_Introduction_to_Humanoid_Robotics)|
