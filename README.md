@@ -23,3 +23,8 @@ list of book robotics
 |No.|Model Name|Link|
 |:-|:-|:-|
 |201|Introduction-to-Humanoid-Robotics|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/201_Introduction_to_Humanoid_Robotics)|
+
+list of GAN
+|No.|Model Name|Link|
+|:-|:-|:-|
+|301|Scaling-up-StyleGAN2|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/301_Scaling_up_StyleGAN2)|
