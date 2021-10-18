@@ -8,7 +8,7 @@ Joonyoung Kim  , Taewoong Kang  , Dongwoon Song  and Seung-Joon Yi *
 
 Department of Electrical Engineering, Pusan National University, Busan 46241, Korea;
 kjykjy98@pusan.ac.kr (J.K); touy1@pusan.ac.kr (T.K.); vehddnsv@pusan.ac.kr (D.S.) 
-* Correspondence: seungjoon.yi@pusan.ac.kr; Tel.: +82-51-510-7917 
+Correspondence: seungjoon.yi@pusan.ac.kr; Tel.: +82-51-510-7917 
 
 ## Abstract: 
 In this paper, we present a new open source dynamic quadruped robot, PADWQ (pronounced pa-dook), which features 12 torque controlled quasi direct drive joints with high control bandwidth, as well as onboard depth sensor and GPU-equipped computer that allows for a highly dynamic locomotion over uncertain terrains. In contrast to other dynamic quadruped robots based on custom actuator and machined metal structural parts, the PADWQ is entirely built from off the shelf components and standard 3D printed plastic structural parts, which allows for a rapid distribution and duplication without the need for advanced machining process. To make sure that the plastic structural parts can withstand the stress of dynamic locomotion, we performed finite element analysis (FEA) on leg structural parts as well as a continuous walking test using the physical robot, both of which the robot has passed successfully. We hope this work to help a wide range of researchers and engineers that need an affordable, highly capable and easily customizable quadruped robot.
