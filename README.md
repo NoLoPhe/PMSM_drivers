@@ -18,6 +18,9 @@ list of open source robotics
 |102|Solo-8|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/102_Solo_8)|
 |103|Stanford-Pupper|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/103_Stanford_Pupper)|
 |104|Stanford-Doggo|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/104_Stanford_Doggo)|
+|105|Review-of-Quadruped-Robots|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/105_Review_of_Quadruped_Robots)|
+|106|MIT-Cheetah-3|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/106_MIT_Cheetah_3)|
+|107|MIT-Humanoid-Robot|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/107_MIT_Humanoid_Robot)|
 
 list of book robotics
 |No.|Model Name|Link|
