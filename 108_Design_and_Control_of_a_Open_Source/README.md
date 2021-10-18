@@ -1,3 +1,3 @@
 Link: https://www.researchgate.net/publication/351078148_Design_and_Control_of_a_Open-Source_Low_Cost_3D_Printed_Dynamic_Quadruped_Robot
-Link: https://sci-hub.mksa.top/https://www.researchgate.net/publication/351078148_Design_and_Control_of_a_Open-Source_Low_Cost_3D_Printed_Dynamic_Quadruped_Robot
 
+Link: https://sci-hub.mksa.top/https://www.researchgate.net/publication/351078148_Design_and_Control_of_a_Open-Source_Low_Cost_3D_Printed_Dynamic_Quadruped_Robot
