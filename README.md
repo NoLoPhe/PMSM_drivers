@@ -21,6 +21,7 @@ list of open source robotics
 |105|Review-of-Quadruped-Robots|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/105_Review_of_Quadruped_Robots)|
 |106|MIT-Cheetah-3|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/106_MIT_Cheetah_3)|
 |107|MIT-Humanoid-Robot|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/107_MIT_Humanoid_Robot)|
+|108|Design-and-Control-of-a-Open-Source|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/108_Design_and_Control_of_a_Open_Source)|
 
 list of book robotics
 |No.|Model Name|Link|
