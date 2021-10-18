@@ -52,7 +52,7 @@ Energy efficiency is a critical metric for legged machines. Locomotion is a typi
 
 Transmission selections, in particular, have coupled implications for Joule heating and interaction losses. Low gear ratios will reduce the reflected inertia but can cost higher energy in generating torque via Joule heating. On the other hand, if the gear ratios used in a robot are too high for its application, they may improve energetics in theory but can break a leg upon contact or even could prevent a desired dynamic motion due to excessive mechanical impedance. This tradeoff should further be considered based on the robot’s functional requirements such as payload, required travel distance per charge, and travel speed. For instance, a load-carrying robot walking at slow speeds could energetically benefit from a higher gear ratio in comparison to an agile robot running at high speeds. Gear efficiencies and frictional properties play a major role in balancing energetic tradeoffs. Yet, while there exist many methods to identify gear energetics of a fabricated design [14], accurately modeling gear energetics a priori for design optimization is complicated by a variety of factors [15]. Still, whereas energy efficiency is a metric we should seek to maximize, impact mitigation is an essential requirement.
 
-C. Impact Mitigation
+### C. Impact Mitigation
 
 While satisfying the torque and power requirements, the leg should be able to mitigate impact forces upon collision. There are a number of approaches in the literature which may use active control or passive mechanical dynamics to minimize collisional forces surrounding an impact event.
 
@@ -61,9 +61,9 @@ Robot III [19]. Initial impact events are detected, and effective control postim
 
 The series elastic actuation (SEA) paradigm [20]–[22] has been employed in legged machines to reduce initial rigid-body impacts by purposefully adding mechanical elasticity in series with an actuator. More recently, numerous designs have been presented for variable stiffness actuators (VSAs) to mitigate impacts. Stiffness modulation in VSAs has been achieved through a variety of mechanisms. Designs may strategically load nonlinear springs [23] to modulate stiffness or may use linear springs by stretching them in a nonlinear way [24]. Vanderborght et al. [25] provide a thorough review and classification of the many ways to provide and modulate stiffness in VSAs. Other SEA designs, such as in the quadruped StarlETH, have demonstrated successful execution of controlled variable leg impedance using fixed stiffness joint SEAs [26]. While SEAs offer a great potential actuator solution for legged robots, their force bandwidth can suffer in comparison to designs without added compliance. Section III will quantify this effect in a simple leg model.
 
-III. PROPRIOCEPTIVE FORCE CONTROL ACTUATION
+## III. PROPRIOCEPTIVE FORCE CONTROL ACTUATION
 
-A. Impact Force Analysis in a Simplified Leg Model
+### A. Impact Force Analysis in a Simplified Leg Model
 
 This section studies how the design parameters of an actuation system affect its impact dynamics and force control. A simple model, shown in Fig. 2, was developed to capture essential design parameters for a legged system. The model consists of a body mass mb at height yb . Forces delivered to the mass are modulated by an actuated rack and pinion. A pinion of radius r is driven by an ideal actuator with output torque τ . An inertia I represents the total rotational inertia of the actuator including gear transmission. The rack, with mass m , abstracts the entire leg and interfaces with the ground through a Hookean spring with stiffness ki. This stiffness represents a lumped stiffness of the ground, foot covering, and any residual structural stiffness of the leg. We assume that this interface spring has no preload. This assumption is captured in the model by placing the origin in the vertical direction at a height which corresponds to the spring’s rest length at impact.
 
@@ -167,7 +167,7 @@ Previous work has addressed the role of the effective contact inertia in modelin
 
 With these impact-related motivations, this section quantifies how effectively the free dynamics of the mechanism are at reducing impact impulses in a floating-body robot. To emphasize the importance of actuator design on impact dynamics, impulse reduction is evaluated through comparison to a design with worst case reflected inertia, one where all joints are rigidly locked. Through this approach, a new metric, called the impact mitigation factor (IMF), is introduced to quantify the normalized inertial backdrivability of the mechanism. Despite the importance of backdrivability to physical interaction, there are not yet meaningful metrics to compare backdrivability across machines and to include EM actuator properties in such a comparison. The new development discussed in Section III-B2 illuminates the effects of actuator design on previous impact analyses, while Section III-B3 formulates the new IMF metric to quantify inertial backdrivability across different robots.
 
-  - 1) **Rigid-Body Impact Dynamics:** Given a floating-body system, with base coordinates qb ∈ R6 and internal (joint) coordinates qj ∈ Rn its dynamics can be compactly described through
+  - 1. **Rigid-Body Impact Dynamics:** Given a floating-body system, with base coordinates qb ∈ R6 and internal (joint) coordinates qj ∈ Rn its dynamics can be compactly described through
 
 >       Hbb Hbj Hj b Hj j  ¨qb ¨qj + h(q, ˙q) = ST τ + JT f         (23)
 
