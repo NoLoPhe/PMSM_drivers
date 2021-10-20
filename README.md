@@ -27,3 +27,8 @@ list of book robotics
 |No.|Model Name|Link|
 |:-|:-|:-|
 |201|Introduction-to-Humanoid-Robotics|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/201_Introduction_to_Humanoid_Robotics)|
+
+list of tutorial robotics
+|No.|Model Name|Link|
+|:-|:-|:-|
+|301|Tutorial-1|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/301_Tutorial_1)|
