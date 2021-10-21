@@ -50,79 +50,110 @@ And Ava Chen. Hey, Ava: You’re great.
 # Contents
 
 1 Introduction
+
 1.1 A Brief Overview of Actuation for Dynamic Legged Robots
+
   1.1.1  Proprioceptive Electric Actuators
+  
   1.1.2  Hydraulic Actuators
+  
   1.1.3  Series Elastic Actuators
+  
 1.2 Existing Modular Robot Actuators
 
 2 Modular Actuator
-2.1 Performance Requirements
-2.2 Mechanical Design
+
+2.1  Performance Requirements
+
+2.2  Mechanical Design
+
   2.2.1  Electric Motor
+  
   2.2.2  Housing and Planetary Gearbox
+  
   2.2.3  Design for Impact: Estimating Transmission Loading During Collisions
+  
   2.2.4  Bearing Loads
+  
+2.3  Motor Control Hardware
 
-  34  Motor Control Hardware . . . . . . . . . . . . . . . . . . . . . . . . .
+  2.3.1  3-Phase Inverter
+  
+  2.3.2  Logic Power, Gate Drive, Current Sensing, and Microcontroller
+  
+  2.3.3  Position Sensing
+  
+2.4  Control
 
-  37  2.3.1  3-Phase Inverter . . . . . . . . . . . . . . . . . . . . . . . . . .
+  2.4.1  Current and Torque Control
+  
+  2.4.2  Position Sensor Calibration and Linearization
 
-  37  2.3.2  Logic Power, Gate Drive, Current Sensing, and Microcontroller  40  2.3.3  Position Sensing . . . . . . . . . . . . . . . . . . . . . . . . . .
+  2.4.3  Actuator configuration and communication
 
-  40  2.2.4 2.3  2.4  Control  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.5  Actuator Testing and Characterization
 
-  41  2.4.1  Current and Torque Control . . . . . . . . . . . . . . . . . . .
+  2.5.1  Steady-State Performance
 
-  41  2.4.2  Position Sensor Calibration and Linearization . . . . . . . . .
+  2.5.2  Torque Accuracy
 
-  45  2.4.3  Actuator configuration and communication . . . . . . . . . . .
+  2.5.3  Thermal Analysis
 
-  47  5  2.5  Actuator Testing and Characterization . . . . . . . . . . . . . . . . .
+3 Quadruped Platform
 
-  49  2.5.1  Steady-State Performance . . . . . . . . . . . . . . . . . . . .
+3.1  Mechanical Design
+  
+  3.1.1  Legs
 
-  49  2.5.2  Torque Accuracy . . . . . . . . . . . . . . . . . . . . . . . . .
+  3.1.2  Body
 
-  51  2.5.3  Thermal Analysis . . . . . . . . . . . . . . . . . . . . . . . . .
+  3.1.3  Feet
 
-  53  3 Quadruped Platform 3.1  3.2  3.3  57  Mechanical Design . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  3.1.4  Wiring
 
-  58  3.1.1  Legs . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2  Electronics and System Architecture
 
-  58  3.1.2  Body . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  3.2.1  Embeded Linux Computer
 
-  65  3.1.3  Feet . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  3.2.2  SPIne
 
-  67  3.1.4  Wiring . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  3.2.3  Battery and Power Supplies
 
-  68  Electronics and System Architecture . . . . . . . . . . . . . . . . . .
+3.3  Control Experiments
 
-  69  3.2.1  Embeded Linux Computer . . . . . . . . . . . . . . . . . . . .
+  3.3.1  Flipping
 
-  69  3.2.2  SPIne . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4  Other Actuator Implementations
 
-  70  3.2.3  Battery and Power Supplies . . . . . . . . . . . . . . . . . . .
+4.1  Bilateral Teleoperation and High-Force Haptics
 
-  70  Control Experiments . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  4.1.1  Hardware
 
-  74  3.3.1  74  Flipping . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  4.1.2  Bilateral Teleoperation
 
-  4 Other Actuator Implementations 4.1  4.2  81  Bilateral Teleoperation and High-Force Haptics . . . . . . . . . . . .
+  4.1.3  Virtual Environments
 
-  81  4.1.1  Hardware . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.2  Biped for Human-Robot Balance Feedback
 
-  81  4.1.2  Bilateral Teleoperation . . . . . . . . . . . . . . . . . . . . . .
+5  Conclusion
 
-  82  4.1.3  Virtual Environments . . . . . . . . . . . . . . . . . . . . . . .
+Appendix A Code and Design Files
 
-  83  Biped for Human-Robot Balance Feedback . . . . . . . . . . . . . . .
+Appendix B Videos
 
-  85  5 Conclusion  87  Appendix A Code and Design Files  93  Appendix B Videos  95  Appendix C Discrete Time Current Control  97  C.1 System Model in Continuous and Discrete Time . . . . . . . . . . . .
+Appendix C Discrete Time Current Control
 
- 6  97  C.2 Controller Design . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  C.1 System Model in Continuous and Discrete Time
 
-  99  C.3 Implementation in Code . . . . . . . . . . . . . . . . . . . . . . . . . 102 C.4 MATLAB Gain Calculating Script . . . . . . . . . . . . . . . . . . . . 103  7  8  List of Figures 2-1 Assembled actuator. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  C.2 Controller Design
+
+  C.3 Implementation in Code
+  
+  C.4 MATLAB Gain Calculating Script
+  
+# List of Figures
+
+  2-1 Assembled actuator. . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
   24  2-2 Exploded view of the actuator. . . . . . . . . . . . . . . . . . . . . .
 
