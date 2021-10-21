@@ -155,109 +155,111 @@ Appendix C Discrete Time Current Control
 
   2-1 Assembled actuator. . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  24  2-2 Exploded view of the actuator. . . . . . . . . . . . . . . . . . . . . .
+  2-2 Exploded view of the actuator. . . . . . . . . . . . . . . . . . . . . .
 
-  26  2-3 Torque vs current (Left) and torque constant vs current (Right). The motor exhibits some saturation, with torque constant dropping by 12% at maximum current. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  2-3 Torque vs current (Left) and torque constant vs current (Right). The motor exhibits some saturation, with torque constant dropping by 12% at maximum current. . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  27  2-4 Stator (left) and rotor (right) of the brushless motor used in the actuator. The rotor has been modified to fit the sun gear of the planetary transmission. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  2-4 Stator (left) and rotor (right) of the brushless motor used in the actuator. The rotor has been modified to fit the sun gear of the planetary transmission. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  28  2-5 Cross-sectional views of the actuator. On the left, bearings are highlighted in red, rotor in blue, and planet carrier in green. . . . . . . . .
+  2-5 Cross-sectional views of the actuator. On the left, bearings are highlighted in red, rotor in blue, and planet carrier in green. . . . . . . . .
 
-  29  2-6 Machined components of the housing and planetary gearbox . . . . .
+  2-6 Machined components of the housing and planetary gearbox . . . . .
 
-  29  2-7 Case 1: Actuator input compliance . . . . . . . . . . . . . . . . . . .
+  2-7 Case 1: Actuator input compliance . . . . . . . . . . . . . . . . . . .
 
-  31  2-8 Case 2: Actuator output compliance . . . . . . . . . . . . . . . . . .
+  2-8 Case 2: Actuator output compliance . . . . . . . . . . . . . . . . . .
 
-  32  2-9 Case 3: End effector compliance . . . . . . . . . . . . . . . . . . . . .
+  2-9 Case 3: End effector compliance . . . . . . . . . . . . . . . . . . . . .
 
-  32  2-10 PCB layout, front, and back of the inverter. . . . . . . . . . . . . . .
+  2-10 PCB layout, front, and back of the inverter. . . . . . . . . . . . . . .
 
-  38  2-11 Estimated steady-state MOSFET temperature vs peak phase current.
+  2-11 Estimated steady-state MOSFET temperature vs peak phase current.
 
-  39  2-12 View of the actuator with the housing open. The encoder IC which measures rotor position can be seen at the center of the bearing on the left half of the housing. The diametrically magnetized magnet it uses is at the center of the rotor on the right. . . . . . . . . . . . . . . . .
+  2-12 View of the actuator with the housing open. The encoder IC which measures rotor position can be seen at the center of the bearing on the left half of the housing. The diametrically magnetized magnet it uses is at the center of the rotor on the right. . . . . . . . . . . . . . . . .
 
- 9  41  2-13 View of the connectors to the actuator. Two XT-30 connectors are used for DC input power, and two 3-Pin Molex SPOX connectors are used for CAN. Each pair of connectors is in parallel, so actuator modules can be easily daisy-chained. . . . . . . . . . . . . . . . . . . . . . . .
+  2-13 View of the connectors to the actuator. Two XT-30 connectors are used for DC input power, and two 3-Pin Molex SPOX connectors are used for CAN. Each pair of connectors is in parallel, so actuator modules can be easily daisy-chained. . . . . . . . . . . . . . . . . . . . . . . .
 
-  42  2-14 Phase current step response for 10 and 20 Amp steps, measured by external current probe. Current rise time is 75 𝜇s for 10A, and 110 𝜇s for 20A due to motor inductance and voltage limitation. . . . . . . .
+  2-14 Phase current step response for 10 and 20 Amp steps, measured by external current probe. Current rise time is 75 𝜇s for 10A, and 110 𝜇s for 20A due to motor inductance and voltage limitation. . . . . . . .
 
-  43  2-15 Maximum torque vs speed (Left) and power vs speed (Right), with and without field weakening. . . . . . . . . . . . . . . . . . . . . . . . . .
+  2-15 Maximum torque vs speed (Left) and power vs speed (Right), with and without field weakening. . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  45  2-16 1: Rotor angle and voltage vector angle during calibration. 2: Rotor angle minus voltage vector angle. 3: Averaged forwards and backwards error, with and without cogging torque FIR filter. 4: Calibration lookup table . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  2-16 1: Rotor angle and voltage vector angle during calibration. 2: Rotor angle minus voltage vector angle. 3: Averaged forwards and backwards error, with and without cogging torque FIR filter. 4: Calibration lookup table . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  46  2-17 Custom 4-quadrant motor dynamometer used to measure steady-state performance and torque accuracy.
+  2-17 Custom 4-quadrant motor dynamometer used to measure steady-state performance and torque accuracy.
 
   . . . . . . . . . . . . . . . . . . .
 
-  50  2-18 Efficiency Map . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  2-18 Efficiency Map . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  51  2-19 Loss Map . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  2-19 Loss Map . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  52  2-20 Input Power Map. The red contour indicates the zero-power operating points. Outside this region, the actuator sinks electrical power, and inside this region the actuator sources power. . . . . . . . . . . . . . .
+  2-20 Input Power Map. The red contour indicates the zero-power operating points. Outside this region, the actuator sinks electrical power, and inside this region the actuator sources power. . . . . . . . . . . . . . .
 
-  53  2-21 Measured output torque vs torque command, averaged over several rotations, for both positive and negative work. . . . . . . . . . . . . .
+  2-21 Measured output torque vs torque command, averaged over several rotations, for both positive and negative work. . . . . . . . . . . . . .
 
-  54  2-22 Measured rotor cogging torque v s electrical angle. . . . . . . . . . . .
+  2-22 Measured rotor cogging torque v s electrical angle. . . . . . . . . . . .
 
-  55  2-23 Thermal camera images at 5A (left) and 12.5A (right) phase currents.
+  2-23 Thermal camera images at 5A (left) and 12.5A (right) phase currents. Colors do not correspond between images, as the temperature-color mapping automatically scales. . . . . . . . . . . . . . . . . . . . . . .
 
- Colors do not correspond between images, as the temperature-color mapping automatically scales. . . . . . . . . . . . . . . . . . . . . . .
+  2-24 Winding temperature during a 10A step. . . . . . . . . . . . . . . . .
 
-  55  2-24 Winding temperature during a 10A step. . . . . . . . . . . . . . . . .
+  3-1 CAD Rendering of the quadruped . . . . . . . . . . . . . . . . . . . .
 
-  55  3-1 CAD Rendering of the quadruped . . . . . . . . . . . . . . . . . . . .
+  3-2 CAD Diagram of one leg . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  58  3-2 CAD Diagram of one leg . . . . . . . . . . . . . . . . . . . . . . . . .
+  3-3 A variety of configurations possible with the wide range of motion of the legs. Top Left: Turn-on configuration. In this configuration the legs are correctly zeroed for turn-on. Top Right: The robot can be folded up for transportation. Bottom Left: The ab/ad joints have enough range of motion for the robot to walk with the body rolled ± 90∘ . Bottom Right: The legs can be lifted above the body, for climbing very tall obstacles or manipulation. . . . . . . . . . . . . . . . . . . .
 
-  60  10  3-3 A variety of configurations possible with the wide range of motion of the legs. Top Left: Turn-on configuration. In this configuration the legs are correctly zeroed for turn-on. Top Right: The robot can be folded up for transportation. Bottom Left: The ab/ad joints have enough range of motion for the robot to walk with the body rolled ± 90∘ . Bottom Right: The legs can be lifted above the body, for climbing very tall obstacles or manipulation. . . . . . . . . . . . . . . . . . . .
+  3-4 Completed lower link with bearings(Left), and cross section (Right) .
 
-  61  3-4 Completed lower link with bearings(Left), and cross section (Right) .
+  3-5 One half of the upper link (Top), and the two assembled halves (Bottom) 62 3-6 Belt path through the upper link . . . . . . . . . . . . . . . . . . . .
 
-  62  3-5 One half of the upper link (Top), and the two assembled halves (Bottom) 62 3-6 Belt path through the upper link . . . . . . . . . . . . . . . . . . . .
+  3-7 Assembled knee joint. Cross section (Bottom) with the knee axle and bearing spacer in dark blue, bearings in red, upper link in light blue, lower link in orange, and belt in black . . . . . . . . . . . . . . . . . .
 
-  63  3-7 Assembled knee joint. Cross section (Bottom) with the knee axle and bearing spacer in dark blue, bearings in red, upper link in light blue, lower link in orange, and belt in black . . . . . . . . . . . . . . . . . .
+  3-8 Abduction to hip link (Left), attached to both actuators (Right) . . .
 
-  64  3-8 Abduction to hip link (Left), attached to both actuators (Right) . . .
+  3-9 Hip to leg link . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  64  3-9 Hip to leg link . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  3-10 Body components made from waterjet-cut and bent 1.5 mm 6061 sheet
+  
+  3-11 Inside of the assembled body, showing the internal frame-stiffeners, battery mount, and handle on top. . . . . . . . . . . . . . . . . . . .
 
-  65  3-10 Body components made from waterjet-cut and bent 1.5 mm 6061 sheet  66  3-11 Inside of the assembled body, showing the internal frame-stiffeners, battery mount, and handle on top. . . . . . . . . . . . . . . . . . . .
+  3-12 Foot, and cross section(Left). The plastic insert has holes which are filled by the casting foam. . . . . . . . . . . . . . . . . . . . . . . . .
 
-  66  3-12 Foot, and cross section(Left). The plastic insert has holes which are filled by the casting foam. . . . . . . . . . . . . . . . . . . . . . . . .
+  3-13 Wiring harness for one leg. Flexible wires are housed within protective corrugated sheaths, which are fixed by 3D printed guides at each end, strain-relieving the connectors. . . . . . . . . . . . . . . . . . . . . . .
 
-  68  3-13 Wiring harness for one leg. Flexible wires are housed within protective corrugated sheaths, which are fixed by 3D printed guides at each end, strain-relieving the connectors. . . . . . . . . . . . . . . . . . . . . . .
+  3-14 Installed wiring harness for one leg. . . . . . . . . . . . . . . . . . . .
 
-  69  3-14 Installed wiring harness for one leg. . . . . . . . . . . . . . . . . . . .
+  3-15 Diagram of the robot’s communication architecture . . . . . . . . . .
 
-  69  3-15 Diagram of the robot’s communication architecture . . . . . . . . . .
+  3-16 PCB Layout of the SPIne, on the left, and assembled board on the right. 
+  
+  3-17 SPIne and UP board assembled together . . . . . . . . . . . . . . . .
 
-  71  3-16 PCB Layout of the SPIne, on the left, and assembled board on the right. 71 3-17 SPIne and UP board assembled together . . . . . . . . . . . . . . . .
+  3-18 Precharge circuit for turning on battery power. When the power switch is closed, a 12V supply is turned on which charges the gate of MOSFET Q1, turning it on. This allows the output capacitance Cout to be charged through power resistor R1, limiting the charging current to a maximum of V/R1. After a fixed delay set by the time constant of the RC filter made by R2, R3, and C1, the output of the comparator switches on, turning on MOSFET Q2, which bypasses the power resistor. Flyback diode D1 allows current to continue flowing when the switches have been turned off, so that inductance on the output does not cause voltage spikes which would damage the pass transistors or motor drivers. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
- 11  72  3-18 Precharge circuit for turning on battery power. When the power switch is closed, a 12V supply is turned on which charges the gate of MOSFET Q1, turning it on. This allows the output capacitance Cout to be charged through power resistor R1, limiting the charging current to a maximum of V/R1. After a fixed delay set by the time constant of the RC filter made by R2, R3, and C1, the output of the comparator switches on, turning on MOSFET Q2, which bypasses the power resistor. Flyback diode D1 allows current to continue flowing when the switches have been turned off, so that inductance on the output does not cause voltage spikes which would damage the pass transistors or motor drivers. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  3-19 The Kobalt 24V 5 Ah battery. Housing removed on the right, showing the built-in BMS, output terminals, and 18650 cells. . . . . . . . . . .
 
-  73  3-19 The Kobalt 24V 5 Ah battery. Housing removed on the right, showing the built-in BMS, output terminals, and 18650 cells. . . . . . . . . . .
+  3-20 Robot power supply board, which generates an isolated 5V logic supply, distributes power to the legs and computer, and has pass transistors for turning on and off motor power and logic power. The underside of the power supply (right) has board mount FASTON terminals which mate with the spades built into the battery. . . . . . . . . . . . . . .
 
-  73  3-20 Robot power supply board, which generates an isolated 5V logic supply, distributes power to the legs and computer, and has pass transistors for turning on and off motor power and logic power. The underside of the power supply (right) has board mount FASTON terminals which mate with the spades built into the battery. . . . . . . . . . . . . . .
+  3-21 Sequence of frames from the optimization on a 2D sagittal plane model of the robot. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  74  3-21 Sequence of frames from the optimization on a 2D sagittal plane model of the robot. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  3-22 Time series of the quadruped doing a back-flip . . . . . . . . . . . . .
 
-  76  3-22 Time series of the quadruped doing a back-flip . . . . . . . . . . . . .
+  3-23 Joint torques (Left) and joint output power (Right) during the takeoff of the backflip. On top is the output from the 2D optimization, and on the bottom, the data collected from the actual robot during the flip. Values are for each pair of legs, so individual joint torques and powers are half those plotted. . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  77  3-23 Joint torques (Left) and joint output power (Right) during the takeoff of the backflip. On top is the output from the 2D optimization, and on the bottom, the data collected from the actual robot during the flip.
+  3-24 Joint position (Left) and joint velocity (Right) tracking during the takeoff of the backflip, for the front left leg. . . . . . . . . . . . . . . .
 
- Values are for each pair of legs, so individual joint torques and powers are half those plotted. . . . . . . . . . . . . . . . . . . . . . . . . . .
+  4-1 Teleoperation and haptics setup consisting of two 3-DOF arms, with feet replaced by smooth spheres. . . . . . . . . . . . . . . . . . . . . .
 
-  78  3-24 Joint position (Left) and joint velocity (Right) tracking during the takeoff of the backflip, for the front left leg. . . . . . . . . . . . . . . .
+  4-2 Little Hermes, a 6-DOF point-foot bipedal robot. Image used with permission . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
- 12  78  4-1 Teleoperation and haptics setup consisting of two 3-DOF arms, with feet replaced by smooth spheres. . . . . . . . . . . . . . . . . . . . . .
+# List of Tables
 
-  82  4-2 Little Hermes, a 6-DOF point-foot bipedal robot. Image used with permission . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  2.1  Cheetah 3 Specifications . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  13  86  14  List of Tables 2.1  Cheetah 3 Specifications . . . . . . . . . . . . . . . . . . . . . . . . .
+  2.2  Actuator Specifications . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-  25  2.2  Actuator Specifications . . . . . . . . . . . . . . . . . . . . . . . . . .
-
-  25  2.3  CAN Data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  2.3  CAN Data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
 # Chapter 1
 
