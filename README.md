@@ -19,12 +19,10 @@ list of open source robotics
 |103|Stanford-Pupper|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/103_Stanford_Pupper)|
 |104|Stanford-Doggo|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/104_Stanford_Doggo)|
 |105|Review-of-Quadruped-Robots|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/105_Review_of_Quadruped_Robots)|
-|106|MIT-Cheetah-3|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/106_MIT_Cheetah_3)|
+|106|MIT-Cheetah-3-Proprioceptive-Actuator-Design|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/106_MIT_Cheetah_3)|
 |107|MIT-Humanoid-Robot|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/107_MIT_Humanoid_Robot)|
 |108|Design-and-Control-of-a-Open-Source|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/108_Design_and_Control_of_a_Open_Source)|
 |109|A-low-cost-modular-actuator-for-dynamic-robots|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/109_A_low_cost_modular_actuator_for_dynamic_robots)|
-|110|Proprioceptive-Actuator-Design|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/110_Proprioceptive_Actuator_Design)|
-
 
 list of book robotics
 |No.|Model Name|Link|
