@@ -323,6 +323,14 @@ For a quadruped 60% the size of Cheetah 3, assuming linear scaling in every dime
 
 Table 2.1: Cheetah 3 Specifications
 
+Mass 41 kg
+
+Maximum Joint Torque 230 N m
+
+Maximum Joint Velocity 18 rad s−1
+
+Link Length 0.34 m
+
 The specifications of the actuator developed are summarized in Table 2.2.
 
 Table 2.2: Actuator Specifications
