@@ -1,7 +1,10 @@
 Link: https://ieeexplore.ieee.org/document/7827048
 Link: https://sci-hub.mksa.top/10.1109/TRO.2016.2640183
 
-electromagnetic (EM)
+electromagnetic (EM) actuators
+Proprioceptive Electric Actuators
+
+    [ Hình ]
 
 PHYSICAL interactions with the environment play a crucial role in many emerging applications of robotics. Whether
 in legged locomotion or disaster response, the need to control and exploit interaction with the environment introduces unique challenges to actuator design. As we focus on these applications, it is imperative to shift our actuator paradigms away from technologies that have been optimized for the assembly line floor. Most manufacturing robots have been designed to perform rapid and accurate pick-and-place position control sequences in wellknown environments. Future mobile robots, however, must be capable to manage broader dynamic and force-critical interactions in unstructured environments. The actuator paradigm presented in this paper offers an approach for electromagnetic (EM) actuators to address these needs.
