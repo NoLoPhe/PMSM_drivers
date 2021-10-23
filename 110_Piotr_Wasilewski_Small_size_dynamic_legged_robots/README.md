@@ -567,8 +567,11 @@ By substituting the motor parameters, corner frequency (𝑟𝑎𝑑𝑖𝑎𝑛
 Table 4-1 Discrete and continuous gains comparison
 
 Continuous  
+
 Discrete (T = 25μs)  
+
 𝑘𝑝  0.503  0.520  
+
 𝑘𝑖  2875  2774  
 
 The discrete time system was examined in a similar way as the continuous one and the results were compared.
@@ -620,15 +623,25 @@ Both read and estimated parameters are listed in Table 4-2.
 Table 4-2 Motor comparison
 
 Parameter Sunnysky X4108s QM5006 Turningy 4822
+
 Outer diameter (mm)  46.1  47.5  47.5
+
 Mass (g)  113  87  100
+
 Height (mm)  25.5  20  25
+
 KV rating  380  350  690
+
 Pole pairs  12  14  11
+
 Torque constant (Nm/A)  0.0217  0.0236  0.0119
+
 Motor constant (Nm/√W)  0.0440  0.0492  0.0371
+
 Motor constant per 1 gram of motor mass  0.00039  0.00057  0.00037
+
 Phase resistance ()  0.122  0.117  0.052
+
 Price (USD $)  24.7  25.0  32.3
 
 Presenting a superior motor constant, lower price, and lowest profile height among other motors, the QM5006 motor was chosen. After purchasing, the motor was tested if the estimated parameters match the real measured values. The motor was spun with an electric drill and the resultant line-to-line bEMF voltage signal was recorded. The KV parameter was estimated from the frequency and peak-to-peak voltage. Then the phase resistance was obtained by measuring the voltage drop across the two phases with a known current flowing through them. The measured parameters are listed in Table 4-3.
@@ -636,13 +649,21 @@ Presenting a superior motor constant, lower price, and lowest profile height amo
 Table 4-3 Comparison between specification sheet and measured motor parameters
 
 Parameter Specification (estimated) Measured
+
 Outer diameter (mm)  47.5  47.6
+
 Mass (g)  87  92
+
 Height (mm)  20  20.1
+
 KV rating  350  293
+
 Torque constant (Nm/A)  0.0236  0.028
+
 Motor constant (Nm/√W)  0.0492  0.056
+
 Motor constant per 1 gram of motor mas  0.00057  0.00037
+
 Phase resistance ()  0.117  0.1153
 
 There is a slight difference in the measured and estimated values of torque constant and motor constant. This might be the result of different magnet strength or inaccurate data posted in the motor specification. Additionally, the shape of the induced bEMF voltage signal was found to be sinusoidal, which indicates the motor is PMSM type. This was a desired feature as it works in favor when FOC control algorithm is used.
@@ -723,195 +744,317 @@ Maximum phase current and maximum supply voltage are usually the first parameter
 
 Knowing the maximum phase current and supply voltage is a good starting point for choosing appropriate MOSFET transistors. Small area on the PCB dedicated for the transistors narrowed down the available package options to only a few. Eventually, a Vishay PowerPAK 1212-8 was chosen. This package is superior as the manufacturer produces a variety of transistors with different parameters in the same case. In case of any modifications regarding the maximum current or voltage, it is easier to change only the transistors without influencing the PCB layout. Finally, the SISA88DN was selected. The transistor features a maximum drainsource voltage of 30V and a maximum continuous drain current (ID) of 40.5 A. Moreover, it has a relatively low total gate charge (Qg) – 8.3 nC, which directly influences the time it takes for the MOSFET to go into the full conduction state. The channel resistance in the on state is low (Rdson = 0.0067 Ω), resulting in low resistance loss when the transistor is conducting. The dimensions of a single transistor are only 3.3x3.3x1.0 mm.
 
- In order to switch the transistors very fast, it is essential to use a dedicated driver IC. A Texas Instruments DRV8323RS “smart” driver dedicated for brushless motor control was chosen. It is described “smart” as it supervises the PWM signals being applied on the half bridges and does not allow for a shoot-through, automatically adjusts dead-time and detects any MOSFET faults immediately stopping the commutation process. The driver allows for changing many drive parameters such as gate charge current, additional dead-time, PWM modes, and many more. Moreover, it is equipped with a buck regulator that can be used for powering the microcontroller from the main DC bus. Three built-in operational amplifiers are dedicated to reading the phase currents from shunt resistors, so that no external components are required.
+In order to switch the transistors very fast, it is essential to use a dedicated driver IC. A Texas Instruments DRV8323RS “smart” driver dedicated for brushless motor control was chosen. It is described “smart” as it supervises the PWM signals being applied on the half bridges and does not allow for a shoot-through, automatically adjusts dead-time and detects any MOSFET faults immediately stopping the commutation process. The driver allows for changing many drive parameters such as gate charge current, additional dead-time, PWM modes, and many more. Moreover, it is equipped with a buck regulator that can be used for powering the microcontroller from the main DC bus. Three built-in operational amplifiers are dedicated to reading the phase currents from shunt resistors, so that no external components are required.
 
- To implement FOC control, it is necessary to obtain the information about the rotor shaft position. An AMS AS5047B 14-bit magnetic encoder was used to read the rotor angular position. The IC works with a diametrically magnetized magnet located on the shaft. It can operate simultaneously in both absolute and incremental mode. High speed SPI bus is used to read absolute position data, whereas the incremental data is obtained through ABI output.
+To implement FOC control, it is necessary to obtain the information about the rotor shaft position. An AMS AS5047B 14-bit magnetic encoder was used to read the rotor angular position. The IC works with a diametrically magnetized magnet located on the shaft. It can operate simultaneously in both absolute and incremental mode. High speed SPI bus is used to read absolute position data, whereas the incremental data is obtained through ABI output.
 
- 57 59:1112899519   The microcontroller is a STM32 G4 series microcontroller, optimized for usage in motor control applications. It features hardware support for fast trigonometric calculations and filtering signals. Built-in timers with encoder support allow for easy integration with external position sensors and hardware ABI signals handling. Moreover, the microcontroller features a CANFD bus peripheral used for high speed data exchange. In order to measure phase currents the double ADC unit was utilized.
+The microcontroller is a STM32 G4 series microcontroller, optimized for usage in motor control applications. It features hardware support for fast trigonometric calculations and filtering signals. Built-in timers with encoder support allow for easy integration with external position sensors and hardware ABI signals handling. Moreover, the microcontroller features a CANFD bus peripheral used for high speed data exchange. In order to measure phase currents the double ADC unit was utilized.
 
- DC bus capacitors are another crucial part of the controller. They supply short-period high current spikes when the transistors are switching, lowering the DC bus voltage ripple. To preserve the low profile of the controller, ceramic capacitors were used. In comparison to electrolytic and tantalum capacitors, they feature lower equivalent series resistance (ESR), and smaller packages. Although they are prone to DC bias derating, which is inherently linked to ceramic capacitors and their internal structure. It means the higher the DC voltage applied to the capacitor, the lower the effective capacitance is. Based on the information stated in [20], it is beneficial to use X7R or X5R dielectric type over Y5V. The C0G dielectric capacitors capacitance is not affected by the DC bias, however, their price excludes them from this application. Eventually, eight 10uF X7R capacitors were chosen, which correspond to at least 40uF at 24V.
+DC bus capacitors are another crucial part of the controller. They supply short-period high current spikes when the transistors are switching, lowering the DC bus voltage ripple. To preserve the low profile of the controller, ceramic capacitors were used. In comparison to electrolytic and tantalum capacitors, they feature lower equivalent series resistance (ESR), and smaller packages. Although they are prone to DC bias derating, which is inherently linked to ceramic capacitors and their internal structure. It means the higher the DC voltage applied to the capacitor, the lower the effective capacitance is. Based on the information stated in [20], it is beneficial to use X7R or X5R dielectric type over Y5V. The C0G dielectric capacitors capacitance is not affected by the DC bias, however, their price excludes them from this application. Eventually, eight 10uF X7R capacitors were chosen, which correspond to at least 40uF at 24V.
 
- The CANFD peripheral requires an external transceiver used for translating ground referenced microcontroller signals to differential CANFD bus signals. MCP2542 was used as it is CANFD compliant, with a maximum speed of 8Mbps and a small 3x3mm DFN case.
+The CANFD peripheral requires an external transceiver used for translating ground referenced microcontroller signals to differential CANFD bus signals. MCP2542 was used as it is CANFD compliant, with a maximum speed of 8Mbps and a small 3x3mm DFN case.
 
- 4.3.2  Schematic and PCB design  After selecting the main components, the schematic and PCB board were designed in Altium Designer 18 program. Recommended designs of each IC were used as a reference when creating the schematic. The main structure was also inspired by other brushless motor control projects [21, 8, 22, 16]. The schematic can be found in Appendix 1.
+### 4.3.2  Schematic and PCB design
 
- Figure 4-27 Depicts the power supply distribution arrangement.
+After selecting the main components, the schematic and PCB board were designed in Altium Designer 18 program. Recommended designs of each IC were used as a reference when creating the schematic. The main structure was also inspired by other brushless motor control projects [21, 8, 22, 16]. The schematic can be found in Appendix 1.
 
-  Figure 4-27 Controller power supply structure 58 60:3605042461   The module power supply can vary from 12 to 24 V. It would not be optimal to use a single LDO to power the 3.3 V devices, as they may consume up to 50 mA and cause excessive LDO heating. To solve that, an internal DR8323RS buck converter was used. The converter outputs 5 V which are forwarded to the LDO. This way the voltage drop on the LDO is significantly lower and thus the heating is reduced. The 5 V bus is also used to power CANFD transceiver so that the LDO is not loaded with additional current.
+Figure 4-27 Depicts the power supply distribution arrangement.
 
- The PCB is a small (33x33 mm), low profile, 4-layer design. It has four mounting holes, two connectors, and soldering pads for power supply and the motor. To improve the immunity to interference, some requirements were imposed on the PCB design [23]:   Low inductance paths for charging and discharging the MOSFET gate capacitor. If high transistor switching frequency is desired, it is essential to keep the copper trace loops as small as possible. This improves the current rise time, as well as mitigates the interference caused by induction. The poor and correct layout is compared in Figure 4-28.
+Figure 4-27 Controller power supply structure
 
-  Figure 4-28 a) poor layout resulting in large loops, b) correct layout - using other layers to minimize the area created by the traces. The yellow colour indicates gate charge traces whereas green is used for depicting the return paths  Separate digital and power ground planes. The ground plane is divided into two areas – one for the digital domain and the other for carrying high currents flowing to the motor.
+The module power supply can vary from 12 to 24 V. It would not be optimal to use a single LDO to power the 3.3 V devices, as they may consume up to 50 mA and cause excessive LDO heating. To solve that, an internal DR8323RS buck converter was used. The converter outputs 5 V which are forwarded to the LDO. This way the voltage drop on the LDO is significantly lower and thus the heating is reduced. The 5 V bus is also used to power CANFD transceiver so that the LDO is not loaded with additional current.
 
- This way, the high currents and voltage drops associated with them will not influence the sensitive digital components. The two planes are connected in a single point near the DRV8323 driver. Ideally, the connection point should be located in the spot, where 59 61:8916380489   the power supply is connected, however, it was not optimal in this case, due to the location of the MOSFET driver.
+The PCB is a small (33x33 mm), low profile, 4-layer design. It has four mounting holes, two connectors, and soldering pads for power supply and the motor. To improve the immunity to interference, some requirements were imposed on the PCB design [23]:
 
-  Figure 4-29 Ground plane separation. The digital domain is less affected by the voltage drops and interference caused by high currents in the power domain  Four layer PCB design allowed for creating two internal planes: VCC and GND. This way, the decoupling capacitors can be placed near the ICs, ensuring low inductance current paths. As a good design principle, the ground plane was placed directly under the components layer for improved EMI characteristics. Moreover, the VCC plane was offset with respect to the GND in order to reduce the radiated emission at PCB edges.
+    - Low inductance paths for charging and discharging the MOSFET gate capacitor. If high transistor switching frequency is desired, it is essential to keep the copper trace loops as small as possible. This improves the current rise time, as well as mitigates the interference caused by induction. The poor and correct layout is compared in Figure 4-28.
 
- The board layer stack can be seen in Figure 4-30.
+Figure 4-28 a) poor layout resulting in large loops, b) correct layout - using other layers to minimize the area created by the traces. The yellow colour indicates gate charge traces whereas green is used for depicting the return paths
 
-  60 62:9947615895    Figure 4-30 Board layer stack  To measure very small voltage drops across each shunt resistor, the traces had to be designed very carefully. Each shunt resistor is connected between low-side MOSFET transistor and the power ground plane. To prevent possible measurement errors due to voltage drop (caused by additional resistance of the terminals), it was decided to use the four-terminal sensing connection (Kelvin contact). The sensing traces were placed close to each other in order to improve the immunity to interference.
+    - Separate digital and power ground planes. The ground plane is divided into two areas – one for the digital domain and the other for carrying high currents flowing to the motor. This way, the high currents and voltage drops associated with them will not influence the sensitive digital components. The two planes are connected in a single point near the DRV8323 driver. Ideally, the connection point should be located in the spot, where the power supply is connected, however, it was not optimal in this case, due to the location of the MOSFET driver.
 
-  Figure 4-31 Four-terminal shunt resistor connection  61 63:2720913618    Double encoder footprint – in case the main encoder (AS5147) is not available on the market, or the price is too high, another encoder can be used (MA702) without the need of changing the whole PCB layout. This was accomplished by placing two footprints in the same PCB region, so that the two ICs can be used interchangeably.
+Figure 4-29 Ground plane separation. The digital domain is less affected by the voltage drops and interference caused by high currents in the power domain
 
- The resulting PCB design, divided into four individual layers, is shown in Figure 4-32.
+    - Four layer PCB design allowed for creating two internal planes: VCC and GND. This way, the decoupling capacitors can be placed near the ICs, ensuring low inductance current paths. As a good design principle, the ground plane was placed directly under the components layer for improved EMI characteristics. Moreover, the VCC plane was offset with respect to the GND in order to reduce the radiated emission at PCB edges. The board layer stack can be seen in Figure 4-30.
 
-  Figure 4-32 Individual layers of the motor controller PCB To be able to solder many controllers at once, a solder stencil was purchased with the PCB boards. The stencil was used to distribute the soldering paste on the exposed pads. Then the components were placed on the PCB board and soldered using reflow technique in a small oven. Reflow technique allows for repeatable solder joints and superior visual effects, even without cleaning the board after soldering. A completed PCB after soldering is shown in Figure 4-33.
+Figure 4-30 Board layer stack
 
-  62 64:1047940865    Figure 4-33 Soldered motor controller, mounted on the aluminium base part  4.4 Software 4.4.1  Commutation routine  To achieve high bandwidth current control and minimize voltage ripple due to PWM switching on a relatively low inductance motor, a high PWM frequency had to be chosen (40 kHz). This high PWM frequency results in less than 25μs for all measurements and calculations required by the FOC algorithm.
+    - To measure very small voltage drops across each shunt resistor, the traces had to be designed very carefully. Each shunt resistor is connected between low-side MOSFET transistor and the power ground plane. To prevent possible measurement errors due to voltage drop (caused by additional resistance of the terminals), it was decided to use the four-terminal sensing connection (Kelvin contact). The sensing traces were placed close to each other in order to improve the immunity to interference.
 
-  Figure 4-34 Actions performed in the 25 μs window Due to strict time constraints, it was necessary to use 32-bit float type for calculations, which can be computed on the hardware FPU unit with low latency. At the same time, any casting actions to 64-bit double type had to be omitted as it introduced a few microseconds of additional loop time, exceeding the 25 μs boundary.
+Figure 4-31 Four-terminal shunt resistor connection
 
- In order to keep the tight time constraints, the interrupt handler had to be optimized.
+    - Double encoder footprint – in case the main encoder (AS5147) is not available on the market, or the price is too high, another encoder can be used (MA702) without the need of changing the whole PCB layout. This was accomplished by placing two footprints in the same PCB region, so that the two ICs can be used interchangeably.
 
- The encoder position SPI readout function from STMicroelectronics HAL library was too slow.
+The resulting PCB design, divided into four individual layers, is shown in Figure 4-32.
 
- It was replaced with a direct register operating function that was fast enough to fit in the fewmicrosecond time window. Another relatively slow operation was the sine and cosine function calculation, needed for the FOC algorithm transformations. There were three available options 63 65:7521924261   that were considered – sinf() and cosf() from the math.h library, lookup tables or CORDIC peripheral. The first solution was to use the build-in float type functions which were expected to be the slowest, although the easiest to use. The lookup table solution has the biggest memory usage amongst other solutions, however it should be much faster than the built-in sinf/cosf functions. Coordinate Rotation Digital Computer (CORDIC) is an internal co-processor of the STM32 G4 series microcontroller. It is used for accelerating trigonometric calculations for motor control and signal processing applications, saving the main processor time.
+Figure 4-32 Individual layers of the motor controller PCB
 
- A test was carried out to determine the fastest implementation. All three solutions were used to calculate sin(x) and cos(x) functions for x varying from 0 to 14π radians. A wider argument range than the sin/cos base period was chosen in order to detect any execution time increase due to modulo division that is implemented to cut down the angle range to 0-2π radians.
+To be able to solder many controllers at once, a solder stencil was purchased with the PCB boards. The stencil was used to distribute the soldering paste on the exposed pads. Then the components were placed on the PCB board and soldered using reflow technique in a small oven. Reflow technique allows for repeatable solder joints and superior visual effects, even without cleaning the board after soldering. A completed PCB after soldering is shown in Figure 4-33.
 
- The results are depicted in Figure 4-35.
+Figure 4-33 Soldered motor controller, mounted on the aluminium base part
 
-  Figure 4-35 Execution time comparison between different sin(x) and cos(x) calculation algorithms Presumably, the math.h library trigonometric implementations were the slowest, and highly dependent on the angle, especially in the 0-π range. The lookup table solution is much faster, especially at angles greater than π radians, however, the greater the angle above the base sin(x) period, the more time it takes to calculate it. This could be notably observed with high pole number motors. The CORDIC implementation is undoubtedly the fastest, as it takes less than a microsecond to complete both sin(x) and cos(x) calculations, and the execution time is 64 66:1000638120   not angle-dependent. The accuracy of each implementation was determined, by comparing it to the double-type math.h function. It was found that the fsin() and fcos() functions were the most accurate with a maximum percentage error of 8.74e-6 %, the CORDIC implementation featured 0.018% of maximum percentage error, and the least accurate was the table implementation that gave 0.614% of maximum percentage error. For the hardware setup in the presented actuator the CORDIC implementation is the most sufficient one, considering both accuracy and execution time.
+## 4.4 Software
 
- Thanks to these optimizations, the single algorithm loop pass takes around 20-21 μs.
+### 4.4.1  Commutation routine
 
- 4.4.2  Timer  The hardware Timer1 is used for generating the motor PWM signals. It works in the center-aligned mode, which means it counts up and down and the PWM signal is aligned with the period center. The interrupt is being executed only when the timer counter reaches the autoreload value (2249). This ensures that the interrupt is started in the 0th sector when all low side switches are closed (Figure 4-36).
+To achieve high bandwidth current control and minimize voltage ripple due to PWM switching on a relatively low inductance motor, a high PWM frequency had to be chosen (40 kHz). This high PWM frequency results in less than 25μs for all measurements and calculations required by the FOC algorithm.
 
-  Figure 4-36 Timer to PWM operation on each phase. Note – the PWM waveforms are in regard to high side switches – 1 means closed, 0 means open. The low side switches are complementary.
+Figure 4-34 Actions performed in the 25 μs window
 
- 65 67:9268555566   4.4.3  ADC measurements  The algorithm presented in Figure 4-34 starts with ADC current measurements used for computing d/q axis currents. To get accurate measurements, the currents have to be sampled in the middle of the 0th sector (at the very beginning of the interrupt handler). Only two ADCs are used for sampling currents, as the third one can be calculated based on the first Kirchoff’s law.
+Due to strict time constraints, it was necessary to use 32-bit float type for calculations, which can be computed on the hardware FPU unit with low latency. At the same time, any casting actions to 64-bit double type had to be omitted as it introduced a few microseconds of additional loop time, exceeding the 25 μs boundary.
 
- Obtained voltage drop measurements (across each shunt resistor) are converted to currents in amperes. Later on, they are used to calculate the d/q axis currents.
+In order to keep the tight time constraints, the interrupt handler had to be optimized. The encoder position SPI readout function from STMicroelectronics HAL library was too slow. It was replaced with a direct register operating function that was fast enough to fit in the fewmicrosecond time window. Another relatively slow operation was the sine and cosine function calculation, needed for the FOC algorithm transformations. There were three available options that were considered – sinf() and cosf() from the math.h library, lookup tables or CORDIC peripheral. The first solution was to use the build-in float type functions which were expected to be the slowest, although the easiest to use. The lookup table solution has the biggest memory usage amongst other solutions, however it should be much faster than the built-in sinf/cosf functions. Coordinate Rotation Digital Computer (CORDIC) is an internal co-processor of the STM32 G4 series microcontroller. It is used for accelerating trigonometric calculations for motor control and signal processing applications, saving the main processor time.
 
- The motor temperature and DC bus voltage are sampled right after the phase current measurement is returned by the ADCs. Motor temperature is measured to detect possible overheat events, so that the motor is safely turned off without burning the coils or affecting the magnet strength. The DC bus voltage is monitored for overvoltage events likely to happen when the motor is braking or changing direction rapidly and the energy is injected to the bus through freewheeling MOSFET diodes. This causes a relatively long (in the millisecond range) voltage spike above the nominal DC bus voltage that can damage the hardware. As there is not enough space in the module for an additional breaking resistor and additional transistor, the extra energy is dumped in the d axis by commanding a nonzero d axis reference current. Assuming the actuator is working in a legged robot where the overvoltage events are intermittent, the motor can be used as a breaking resistor without the chance of overheating.
+A test was carried out to determine the fastest implementation. All three solutions were used to calculate sin(x) and cos(x) functions for x varying from 0 to 14π radians. A wider argument range than the sin/cos base period was chosen in order to detect any execution time increase due to modulo division that is implemented to cut down the angle range to 0-2π radians.
 
- This technique could not be sufficient for continuously rotating motors in applications such as e-bikes or electric skateboards, where the breaking resistor is indispensable. In case of overvoltage detection, the controller commands a nonzero current in the d axis to dump the energy in the motor.
+The results are depicted in Figure 4-35.
 
- 4.4.4  Position and velocity measurement  The second block depicted in Figure 4-34 symbolizes the rotor position and speed measurements. As mentioned earlier in this chapter, the encoder communicates with the microcontroller through two buses – SPI (for absolute output) and ABI (for incremental output).
+Figure 4-35 Execution time comparison between different sin(x) and cos(x) calculation algorithms
 
- The absolute output is used for determining the magnetic offset and for position calculations, whereas the incremental output is used for velocity measurement. Similarly to [21], the velocity is calculated by measuring the time (t) between two respective encoder timer ticks (Figure 4-37).
+Presumably, the math.h library trigonometric implementations were the slowest, and highly dependent on the angle, especially in the 0-π range. The lookup table solution is much faster, especially at angles greater than π radians, however, the greater the angle above the base sin(x) period, the more time it takes to calculate it. This could be notably observed with high pole number motors. The CORDIC implementation is undoubtedly the fastest, as it takes less than a microsecond to complete both sin(x) and cos(x) calculations, and the execution time is not angle-dependent. The accuracy of each implementation was determined, by comparing it to the double-type math.h function. It was found that the fsin() and fcos() functions were the most accurate with a maximum percentage error of 8.74e-6 %, the CORDIC implementation featured 0.018% of maximum percentage error, and the least accurate was the table implementation that gave 0.614% of maximum percentage error. For the hardware setup in the presented actuator the CORDIC implementation is the most sufficient one, considering both accuracy and execution time.
 
-  66 68:6947042943    Figure 4-37 Velocity measurement based on time intervals This approach utilizes two timers – one working in encoder mode, that counts up and down, depending on the motor rotation direction, and the second which measures the time intervals between the respective encoder timer ticks. This approach allows for high frequency velocity output, even at low speeds, and works in the background, which is superior to manual position differentiation. The velocity signal is relatively noisy, so a 250 sample moving average filter was used, as it does not influence the data output frequency. The filter was implemented in two manners - using FMAC (Filter Math Accelerator) hardware filtering peripheral and directly in the software. The execution time difference was insignificant, so the author decided to use the software implementation as it allowed for increasing the filter sample count when needed.
+Thanks to these optimizations, the single algorithm loop pass takes around 20-21 μs.
 
- 4.4.5  Encoder calibration routine  There are two parameters that have to be calibrated beforehand, and a motor can be run for the first time. The first one is the offset between the zero position of the encoder and the true zero position of the rotor with respect to the magnetic poles (Figure 4-38). The offset is measured by commanding a nonzero voltage in d axis, zero voltage in q axis and setting the theta angle to 0. This causes the rotor to align with the d axis – “zero” position of the motor’s rotor. After the rotor settles, the controller reads the position from the encoder and saves it as an offset. The offset is subtracted every time a position is sampled. This ensures the controller always knows where the zero position of the rotor is and thus is able to generate an appropriate commutation.
+4.4.2  Timer
+ 
+The hardware Timer1 is used for generating the motor PWM signals. It works in the center-aligned mode, which means it counts up and down and the PWM signal is aligned with the period center. The interrupt is being executed only when the timer counter reaches the autoreload value (2249). This ensures that the interrupt is started in the 0th sector when all low side switches are closed (Figure 4-36).
 
- 67 69:9876850443    Figure 4-38 Offset definition The other calibration process is to compensate for the eccentricity of the magnet and the encoder. It allows to mitigate the effects of non-axial placement between the encoder and the magnet placed on the rotor’s shaft. Even a small placement error caused by sloppy soldering of the encoder sensor IC can lead to relatively big torque variations within a single rotation.
+Figure 4-36 Timer to PWM operation on each phase. Note – the PWM waveforms are in regard to high side switches – 1 means closed, 0 means open. The low side switches are complementary.
 
- This can be accounted for with a calibration process. During the calibration, the controller rotates the rotor slowly by a full rotation and records the error between the setpoint angle value and the read value from the encoder. Afterwards, the controller filters the position samples to get rid of cogging effects or vibrations and constructs a 128-point lookup table. The table is saved in flash memory so that the calibration has to be done only once per motor module.
+4.4.3  ADC measurements
 
- During the operation, values from the lookup table are subtracted or added to the read position values to compensate for sensor eccentricity. One has to remember that after any mechanical change in position of the sensor and the magnet, the calibration routine should be performed again.
+The algorithm presented in Figure 4-34 starts with ADC current measurements used for computing d/q axis currents. To get accurate measurements, the currents have to be sampled in the middle of the 0th sector (at the very beginning of the interrupt handler). Only two ADCs are used for sampling currents, as the third one can be calculated based on the first Kirchoff’s law. Obtained voltage drop measurements (across each shunt resistor) are converted to currents in amperes. Later on, they are used to calculate the d/q axis currents.
 
-  68 70:6871282762    Figure 4-39 The position error due to magnet-encoder misalignment before and after the calibration routine Although the motor module is equipped with an encoder, it cannot explicitly determine its output position after startup. This is due to the planetary gearbox presence which causes multiple motor shaft rotations per single output shaft rotation. Therefore, after the startup, the output shaft can be in one of the four and a half sectors (due to the gear ratio of 4.5:1) from the motor encoder’s point of view. A solution to this is to put the shaft in the known position before the motor is powered on. As there are four and a half angular areas that can be distinguished, placing the output shaft within an 80° window should be enough for the controller to explicitly determine its output shaft position. Each motor module has to be calibrated beforehand by placing its output shaft in a known position and saving the encoder measurement. This value indicates the position of the actuator output shaft with respect to the motor’s case. To keep the same amount of possible error on each side of the saved position, the encoder reading is offset in such way that it always equals 180° at the saved output position (Figure 4-40). This offset is only valid within one 80° slot.
+The motor temperature and DC bus voltage are sampled right after the phase current measurement is returned by the ADCs. Motor temperature is measured to detect possible overheat events, so that the motor is safely turned off without burning the coils or affecting the magnet strength. The DC bus voltage is monitored for overvoltage events likely to happen when the motor is braking or changing direction rapidly and the energy is injected to the bus through freewheeling MOSFET diodes. This causes a relatively long (in the millisecond range) voltage spike above the nominal DC bus voltage that can damage the hardware. As there is not enough space in the module for an additional breaking resistor and additional transistor, the extra energy is dumped in the d axis by commanding a nonzero d axis reference current. Assuming the actuator is working in a legged robot where the overvoltage events are intermittent, the motor can be used as a breaking resistor without the chance of overheating.
 
-  69 71:8905872754    Figure 4-40 Encoder position offset – the output shaft reference point must lie within the green region for correct position initiation If the device gets powered on in any other slot (other than that it was calibrated in), it is going to assume the saved position is somewhere else, leading to false output position readings.
+This technique could not be sufficient for continuously rotating motors in applications such as e-bikes or electric skateboards, where the breaking resistor is indispensable. In case of overvoltage detection, the controller commands a nonzero current in the d axis to dump the energy in the motor.
 
- Additional encoder could be used to determine the output shaft position precisely without any calibration routines. This solution, however, is more expensive and requires axial placement on the output shaft, which would greatly complicate the mechanical structure and could lead to additional costs. Some absolute encoders can be powered with a small sustaining battery just to keep the internal position counter. This eliminates the need for offset calibration, but comes with increased volume (sustaining battery), cost, and failure rate.
+### 4.4.4  Position and velocity measurement
 
- 4.4.6  Current measurement calibration  To correctly measure the motor phase currents, it is essential to calibrate the current offsets. Without calibration, the controller sees the current waveforms shifted from the zero current level, which influences the amount of torque ripple. To fix that the motor is slowly spun and the current waveforms are analyzed – their maximum and minimum values are used to calculate the offset. After applying the resultant offsets, the current waveforms are centered on the zero current level and the torque ripple is minimized. Figure 4-41 presents the current waveforms before and after the calibration.
+The second block depicted in Figure 4-34 symbolizes the rotor position and speed measurements. As mentioned earlier in this chapter, the encoder communicates with the microcontroller through two buses – SPI (for absolute output) and ABI (for incremental output). The absolute output is used for determining the magnetic offset and for position calculations, whereas the incremental output is used for velocity measurement. Similarly to [21], the velocity is calculated by measuring the time (t) between two respective encoder timer ticks (Figure 4-37).
 
-  70 72:4585684519    Figure 4-41 Before and after the calibration process. The waveforms look similar to trapezoidal ones as there is no position control during this calibration routine – the rotor simply follows the set-point voltage waveforms (open-loop position control).
+Figure 4-37 Velocity measurement based on time intervals
 
- 4.4.7  Automatic motor parameters identification  The controller is also able to detect motor internal parameters such as phase resistance and d/q axis inductance. Measuring resistance is based on the steady state current flowing through the motor coils. The controller commands a certain voltage and after a few milliseconds (more than 5 time constants of the LC circuit) it samples the current flowing through the resistive load. The process is repeated 20 times and the measured resistance is averaged. Phase 2  resistance equals to 3 of the measured value (due to the wye phase connection style).
+This approach utilizes two timers – one working in encoder mode, that counts up and down, depending on the motor rotation direction, and the second which measures the time intervals between the respective encoder timer ticks. This approach allows for high frequency velocity output, even at low speeds, and works in the background, which is superior to manual position differentiation. The velocity signal is relatively noisy, so a 250 sample moving average filter was used, as it does not influence the data output frequency. The filter was implemented in two manners - using FMAC (Filter Math Accelerator) hardware filtering peripheral and directly in the software. The execution time difference was insignificant, so the author decided to use the software implementation as it allowed for increasing the filter sample count when needed.
 
- The inductance measurement is somewhat more complicated. Before the measurement is made, the resistance must be acquired. After that, the rotor is aligned with the d axis and a voltage step is applied in the d axis. A timer is used to count the time until the current response reaches 63.2% of the steady state current. The steady state current is calculated from the step voltage and measured resistance. The q axis inductance measurement works in a similar manner, although the rotor is aligned with the q axis. The biggest issue of this method is that 71 73:1365920637   the current rising in the motor coils causes a torque that rotates the rotor. This is why the q axis inductance measurement may be inaccurate to some extent as even a fixed rotor shakes slightly when the q axis voltage is commanded. However, since only surface mount permanent magnet motors are considered, the difference between d and q axis inductance is not going to be significant.
+### 4.4.5  Encoder calibration routine
 
- 4.4.8  High level control  Currently, the actuator is capable of operating in the spring-damper mode (PD control).
+There are two parameters that have to be calibrated beforehand, and a motor can be run for the first time. The first one is the offset between the zero position of the encoder and the true zero position of the rotor with respect to the magnetic poles (Figure 4-38). The offset is measured by commanding a nonzero voltage in d axis, zero voltage in q axis and setting the theta angle to 0. This causes the rotor to align with the d axis – “zero” position of the motor’s rotor. After the rotor settles, the controller reads the position from the encoder and saves it as an offset. The offset is subtracted every time a position is sampled. This ensures the controller always knows where the zero position of the rotor is and thus is able to generate an appropriate commutation.
 
- This high-level control is used by many legged robots to ensure safe interaction (compliance) with the environment [8]. The setpoint torque (q axis current) is calculated as: 𝜏 = 𝐾𝑠 (𝛩𝑑𝑒𝑠 − 𝛩𝑎𝑐𝑡 ) − 𝐾𝑑 (𝛩̇𝑎𝑐𝑡 )  (4.14)  where 𝛩𝑑𝑒𝑠 is the target actuator shaft angle, 𝛩𝑎𝑐𝑡 is the actual angle, 𝛩̇𝑎𝑐𝑡 is the actual rotational velocity, and 𝐾𝑠 , 𝐾𝑑 are spring and damping constants, respectively. The interaction can be varied with the spring and damping constants, based on the desired actuator behavior. The results of this type of high level control are presented in the results chapter.
+Figure 4-38 Offset definition
 
- 4.4.9  CANFD communication  The controller area network flexible data-rate (CANFD) is the main channel used for exchanging information with the module. The classical CAN bus was originally created to communicate with vehicle onboard devices and sensors. It is known for its great immunity to interference and hardware error handling. The CAN flexible data rate means the controller is able to send and receive 64 bytes of data at 8Mbps, whereas classic CAN is able to send up to 8 bytes at maximum 1 Mbps. The CANFD bus is used for commanding new position setpoints, changing persistent settings and updating module firmware.
+The other calibration process is to compensate for the eccentricity of the magnet and the encoder. It allows to mitigate the effects of non-axial placement between the encoder and the magnet placed on the rotor’s shaft. Even a small placement error caused by sloppy soldering of the encoder sensor IC can lead to relatively big torque variations within a single rotation. This can be accounted for with a calibration process. During the calibration, the controller rotates the rotor slowly by a full rotation and records the error between the setpoint angle value and the read value from the encoder. Afterwards, the controller filters the position samples to get rid of cogging effects or vibrations and constructs a 128-point lookup table. The table is saved in flash memory so that the calibration has to be done only once per motor module. During the operation, values from the lookup table are subtracted or added to the read position values to compensate for sensor eccentricity. One has to remember that after any mechanical change in position of the sensor and the magnet, the calibration routine should be performed again.
 
- Communication with a PC requires a converter serving as a translator between USB and CANFD bus. The communication channel must be appropriate for sending messages from and to the master device, so a two-directional data flow is required. This kind of communication structure can be prepared with USB CDC (“Communication Device Class”) library. The microcontroller manufacturer – STMicroelectronics - provides a library which serves as USB to serial converter. After plugging the device to the USB socket, it introduces itself as “Virtual COM Port (VCP)”. This way, the computer is able to forward the serial commands to this virtual COM port, which are received by the microcontroller. There, the message should be rewritten  72 74:9064234570   to the CANFD frame format and sent through CANFD bus to the slave device. Figure 4-42 depicts the structure of the communication system.
+Figure 4-39 The position error due to magnet-encoder misalignment before and after the calibration routine
 
-  Figure 4-42 Structure scheme of the bootloader system Starting from the left, there is a PC running a Python script that sends data frames to the COM serial port. The converter microcontroller receives USB packages and translates them to serial using the STM32 CDC library. Afterwards, the serial message is rewritten to CANFD frame format and sent to the slave device. The communication is bidirectional.
+Although the motor module is equipped with an encoder, it cannot explicitly determine its output position after startup. This is due to the planetary gearbox presence which causes multiple motor shaft rotations per single output shaft rotation. Therefore, after the startup, the output shaft can be in one of the four and a half sectors (due to the gear ratio of 4.5:1) from the motor encoder’s point of view. A solution to this is to put the shaft in the known position before the motor is powered on. As there are four and a half angular areas that can be distinguished, placing the output shaft within an 80° window should be enough for the controller to explicitly determine its output shaft position. Each motor module has to be calibrated beforehand by placing its output shaft in a known position and saving the encoder measurement. This value indicates the position of the actuator output shaft with respect to the motor’s case. To keep the same amount of possible error on each side of the saved position, the encoder reading is offset in such way that it always equals 180° at the saved output position (Figure 4-40). This offset is only valid within one 80° slot.
 
-  Figure 4-43 USB to CANFD converter A special USB to CANFD converter had to be designed from scratch (Figure 4-43). The STM32G431 microcontroller used on each motor module was chosen for this purpose as it is equipped with both CANFD and USB bus. On the PCB there is also a CANFD transceiver, TVS protection diodes for the USB bus, and a small 3.3 V LDO regulator. Three LED diodes are used for interaction – two of them act as status diodes, whereas the third is used to indicate errors. The board is only 35x26 mm. The case for the PCB was designed in SolidWorks program and later milled on the milling machine.
+Figure 4-40 Encoder position offset – the output shaft reference point must lie within the green region for correct position initiation
 
- 73 75:3837334437   4.4.10 Bootloader A bootloader is a special kind of firmware, usually very compact, placed in the beginning of the microcontroller’s memory. This location ensures the bootloader is always executed when the device is restarted. The bootloader’s main function is to check if it should download and then program a new firmware, or if it should continue executing the user’s code. Bootloaders are used to omit the need of using an external programmer. Whenever a firmware upgrade is needed, it can be downloaded over popular communication buses such as serial bus, SPI bus, or even wireless protocols. There are two types of bootloaders commonly used in microcontrollers: 1) The bootloader has to be able to receive the binary firmware file through a specific communication channel, check if it’s not corrupted, and load it into the internal flash memory.
+If the device gets powered on in any other slot (other than that it was calibrated in), it is going to assume the saved position is somewhere else, leading to false output position readings.
 
- This kind of bootloading process is the safest, ensuring that even if the main code is not functional, the firmware can always be replaced.
+Additional encoder could be used to determine the output shaft position precisely without any calibration routines. This solution, however, is more expensive and requires axial placement on the output shaft, which would greatly complicate the mechanical structure and could lead to additional costs. Some absolute encoders can be powered with a small sustaining battery just to keep the internal position counter. This eliminates the need for offset calibration, but comes with increased volume (sustaining battery), cost, and failure rate.
 
- 2) The bootloader is only required to copy the firmware from one place in memory to the other. The whole firmware downloading process is performed by the main code. A major difference from the first bootloader type, especially important for small memory chips, is that the bootloader code itself is very small. This is due to the fact that it has to only copy one section of the memory into another location. No communication nor fault checking is required. Major drawback of this solution is when the main code does not work as expected and is unable of downloading its own repaired firmware. This case requires an external programmer.
+### 4.4.6  Current measurement calibration
 
- Considering the difficult accessibility of each motor controller and its programming connector, when mounted in the leg structure, the most appropriate type of bootloader for actuator application is the first type. At the cost of higher memory footprint, the fault immunity of the whole system is greatly improved.
+To correctly measure the motor phase currents, it is essential to calibrate the current offsets. Without calibration, the controller sees the current waveforms shifted from the zero current level, which influences the amount of torque ripple. To fix that the motor is slowly spun and the current waveforms are analyzed – their maximum and minimum values are used to calculate the offset. After applying the resultant offsets, the current waveforms are centered on the zero current level and the torque ripple is minimized. Figure 4-41 presents the current waveforms before and after the calibration.
 
- The motor controller described in this thesis has a main CANFD communication channel, which is the best way of downloading the firmware. All STM32 microcontrollers are able to replace their firmware through a few different buses with onboard factory programmed bootloaders. However, these bootloaders are placed in ROM memory and cannot be customized or overwritten. This means that the custom system must be adapted to the strict rules from the microcontroller’s documentation, which is not always sufficient. On the other hand, by designing a custom bootloader, one can adapt it for the specific requirements of a particular system without relying on the factory bootloaders. This was the approach chosen in this thesis.
+Figure 4-41 Before and after the calibration process. The waveforms look similar to trapezoidal ones as there is no position control during this calibration routine – the rotor simply follows the set-point voltage waveforms (open-loop position control).
 
- 74 76:6904319337   4.4.11 Updating the firmware The master device communicating with a multislave system must be capable of recognizing each device based on its identification number. CANFD bus peripheral is capable of filtering the messages based on the standard 11-bit (2.0A) or extended 29-bit identification number (2.0B). This means that whenever a device that listens for messages receives a message, which identification number is out of the desired range, the message is going to be ignored on the hardware level. Using this method, the master device can poll the bus for each known ID and wait for the response. If the response is obtained, a slave device is connected to the bus and is ready to be updated. This way, each device can be polled individually, preserving the same command IDs.
+### 4.4.7  Automatic motor parameters identification
 
- Each device must be aware of its CANFD address at all times, even after a power down.
+The controller is also able to detect motor internal parameters such as phase resistance and d/q axis inductance. Measuring resistance is based on the steady state current flowing through the motor coils. The controller commands a certain voltage and after a few milliseconds (more than 5 time constants of the LC circuit) it samples the current flowing through the resistive load. The process is repeated 20 times and the measured resistance is averaged. Phase resistance equals to 2/3 of the measured value (due to the wye phase connection style).
 
- This is assured by placing a special block of information in the FLASH memory of the microcontroller. This block is placed in the last sector of the memory, ensuring it will not be overwritten after a firmware update. At startup, the CANFD peripheral of each module is initialized with different address read from FLASH memory.
+The inductance measurement is somewhat more complicated. Before the measurement is made, the resistance must be acquired. After that, the rotor is aligned with the d axis and a voltage step is applied in the d axis. A timer is used to count the time until the current response reaches 63.2% of the steady state current. The steady state current is calculated from the step voltage and measured resistance. The q axis inductance measurement works in a similar manner, although the rotor is aligned with the q axis. The biggest issue of this method is that the current rising in the motor coils causes a torque that rotates the rotor. This is why the q axis inductance measurement may be inaccurate to some extent as even a fixed rotor shakes slightly when the q axis voltage is commanded. However, since only surface mount permanent magnet motors are considered, the difference between d and q axis inductance is not going to be significant.
 
- The bootloader itself is placed on the beginning of FLASH memory. Considering the special location, it is accessed each time the microcontroller is powered on or any other reset event happens. Reset flags located in CSR register can be used to distinguish between different reset sources. Implementing this selective strategy, the bootloader waits for the firmware update command only after a software reset is detected. If a normal “power on” reset happened, the bootloader will perform an immediate jump to the user’s code. A software reset can be initiated by the device itself, when it receives a reset request through CANFD bus. This way, the bootloader is transparent to the user, but still can be easily accessed by the CANFD commands.
+### 4.4.8  High level control
 
- A small delay of 500 ms could be added in case of power on reset, as it allows for entering the bootloader mode even if the main code is not functional.
+Currently, the actuator is capable of operating in the spring-damper mode (PD control). This high-level control is used by many legged robots to ensure safe interaction (compliance) with the environment [8]. The setpoint torque (q axis current) is calculated as:
 
- The main firmware code is placed above the bootloader starting from a predefined memory address. After “power on” reset, the bootloader jumps directly to the specified address and the user application execution is initiated. The application is capable of CANFD communication. When it receives a reset command from the Python script running on the master computer, it performs a software reset. The bootloader is entered, the software reset is recognized, and the bootloader waits 5 seconds for a confirmation command. If the command is not acquired, the bootloader jumps back to the user application. However, if the command is 75 77:8782645482   received, the bootloader acknowledges the computer, it is functional and waits for erase and program commands. The erase command is telling the bootloader how much flash memory has to be erased to fit the user code. After erasing the memory, the bootloader receives 32 byte packets of firmware. The data is gathered until a 512 byte buffer is filled. Then a CRC (“Cyclic Redundancy Check”) code is sent by the master computer and the microcontroller calculates its own buffer CRC code. The codes are compared on the slave device and only when they are equal a write to the flash memory is performed. The procedure continues until the end of the binary file on the host computer is reached. At the end, a jump command is executed and the user application is started.
+>    𝜏 = 𝐾𝑠 (𝛩𝑑𝑒𝑠 − 𝛩𝑎𝑐𝑡 ) − 𝐾𝑑 (𝛩̇𝑎𝑐𝑡 )  (4.14)
 
- 4.4.12 Control application A simple Python application was created to communicate with individual modules, update their firmware, and check for faults (Figure 4-44). The app was written using TKinter library for window applications in Python.
+where 𝛩𝑑𝑒𝑠 is the target actuator shaft angle, 𝛩𝑎𝑐𝑡 is the actual angle, 𝛩̇𝑎𝑐𝑡 is the actual rotational velocity, and 𝐾𝑠 , 𝐾𝑑 are spring and damping constants, respectively. The interaction can be varied with the spring and damping constants, based on the desired actuator behavior. The results of this type of high level control are presented in the results chapter.
 
-  Figure 4-44 Service PC application  76 78:4213292712   After startup, the user has to choose the correct COM port and speed (baudrate) the CANFD converter is operating at. When the “Open port” button is clicked, the app scans for any connected devices and lists them in the drop down list. The chosen ID number is the currently considered actuator. The upper part of the application is used for updating the actuator firmware, by choosing the binary file and clicking “Flash device” button. The lower part is used for diagnostics and calibration routines. The actuator can be operated in the spring-damper mode by varying the target position, spring constant, and damping constant. The user has the ability to calibrate the encoder offset (align encoder zero position with the d axis), calibrate for eccentric magnet-encoder placement, measure motor internal parameters (inductance, resistance), and calibrate current measurements offsets. There is an option for displaying errors that may occur during calibration routines or normal operation. The errors can be cleared if desired. It is also possible to modify the initial position from which the actuator starts its operation, as well as the physical boundaries the shaft has to stay in. Below the buttons, there is a graph that can be used to view the actual position, velocity, d/q axis currents, DC bus voltage, and motor temperature. The terminal is located on the very bottom of the app window and is used for displaying calibration results, information, and error messages.
+### 4.4.9  CANFD communication
 
-  77 79:6971296164    5 RESULTS 5.1 Initial waveform validation After completing the hardware and software part of the project, the module was tested.
+The controller area network flexible data-rate (CANFD) is the main channel used for exchanging information with the module. The classical CAN bus was originally created to communicate with vehicle onboard devices and sensors. It is known for its great immunity to interference and hardware error handling. The CAN flexible data rate means the controller is able to send and receive 64 bytes of data at 8Mbps, whereas classic CAN is able to send up to 8 bytes at maximum 1 Mbps. The CANFD bus is used for commanding new position setpoints, changing persistent settings and updating module firmware.
 
- Initially, the actual voltage/current waveforms were compared with the simulated ones to check if everything works as expected. The motor was spun with a nonzero q axis (2 A) current and loaded with an external constant torque to actually observe the phase currents.
+Communication with a PC requires a converter serving as a translator between USB and CANFD bus. The communication channel must be appropriate for sending messages from and to the master device, so a two-directional data flow is required. This kind of communication structure can be prepared with USB CDC (“Communication Device Class”) library. The microcontroller manufacturer – STMicroelectronics - provides a library which serves as USB to serial converter. After plugging the device to the USB socket, it introduces itself as “Virtual COM Port (VCP)”. This way, the computer is able to forward the serial commands to this virtual COM port, which are received by the microcontroller. There, the message should be rewritten to the CANFD frame format and sent through CANFD bus to the slave device. Figure 4-42 depicts the structure of the communication system.
 
-  Figure 5-1 Voltage and current waveforms recorded from the real hardware Waveforms presented in Figure 5-1 are similar to the simulated ones (Figure 4-11).
+Figure 4-42 Structure scheme of the bootloader system
 
- There are some distortions that result from not uniform motor load, however the overall shape is correct. The SVPWM modulation is clearly noticeable in the line-to-line voltages, whereas the currents are sinusoids, limited by the setpoint q axis current.
+Starting from the left, there is a PC running a Python script that sends data frames to the COM serial port. The converter microcontroller receives USB packages and translates them to serial using the STM32 CDC library. Afterwards, the serial message is rewritten to CANFD frame format and sent to the slave device. The communication is bidirectional.
 
-  5.2 Torque transducer test bench To measure the actuator torque capability, a simple torque test stand was built. The torque sensor used on the stand is a dynamic torque transducer with load capacity up to 5 Nm.
+Figure 4-43 USB to CANFD converter
 
- It is mounted in the center of the board and can be used as both a static and dynamic sensor.
+A special USB to CANFD converter had to be designed from scratch (Figure 4-43). The STM32G431 microcontroller used on each motor module was chosen for this purpose as it is equipped with both CANFD and USB bus. On the PCB there is also a CANFD transceiver, TVS protection diodes for the USB bus, and a small 3.3 V LDO regulator. Three LED diodes are used for interaction – two of them act as status diodes, whereas the third is used to indicate errors. The board is only 35x26 mm. The case for the PCB was designed in SolidWorks program and later milled on the milling machine.
 
- The actuators are equipped with additional 8 mm output shafts. CNC precision couplers are 78 80:3381396473   used for connecting the actuator shafts and torque transducer shaft. The torque sensor outputs a voltage signal that is proportional to the torque acting on the shaft.
+### 4.4.10 Bootloader
 
-  Figure 5-2 Static torque measurement stand Torque capability measurement was the first test performed on the test bench. One shaft end of the torque transducer was fixed to the stand to prevent it from rotating, while the other was coupled to the examined actuator. The motor module was commanded with gradually increasing q axis current, and cooled down to room temperature between the following current steps to minimize the influence of changing motor parameters due to increased temperature.
+A bootloader is a special kind of firmware, usually very compact, placed in the beginning of the microcontroller’s memory. This location ensures the bootloader is always executed when the device is restarted. The bootloader’s main function is to check if it should download and then program a new firmware, or if it should continue executing the user’s code. Bootloaders are used to omit the need of using an external programmer. Whenever a firmware upgrade is needed, it can be downloaded over popular communication buses such as serial bus, SPI bus, or even wireless protocols. There are two types of bootloaders commonly used in microcontrollers:
 
- The gathered data allowed for creating a graph of the output actuator torque vs q axis current (Figure 5-3).
+    - 1) The bootloader has to be able to receive the binary firmware file through a specific communication channel, check if it’s not corrupted, and load it into the internal flash memory. This kind of bootloading process is the safest, ensuring that even if the main code is not functional, the firmware can always be replaced.
 
-  Figure 5-3 Torque vs q current characteristic  79 81:7229826693   The torque constant was determined from the linear region of the graph. A linear fit was performed to the 0-22A region, which resulted in a coefficient of determination of 0.997.
+    - 2) The bootloader is only required to copy the firmware from one place in memory to the other. The whole firmware downloading process is performed by the main code. A major difference from the first bootloader type, especially important for small memory chips, is that the bootloader code itself is very small. This is due to the fact that it has to only copy one section of the memory into another location. No communication nor fault checking is required. Major drawback of this solution is when the main code does not work as expected and is unable of downloading its own repaired firmware. This case requires an external programmer.
 
- 𝜏 = (0.103 ± 0.00088)𝐼𝑞 + (0.110 ± 0.0113) The torque constant is simply the slope of the linear fit (5.1), which is equal to 0.103  (5.1) 𝑁𝑚 𝐴  . The  saturation region started to show up on the graph when the commanded current exceeded 22 A.
+Considering the difficult accessibility of each motor controller and its programming connector, when mounted in the leg structure, the most appropriate type of bootloader for actuator application is the first type. At the cost of higher memory footprint, the fault immunity of the whole system is greatly improved.
 
- In this region, the motor can operate up to only a few seconds without reaching the temperature limit. Short high current bursts can still be performed. These are especially useful when jumping or moving in a very dynamic manner. Maximum torque of the module was determined to be around 3 Nm at 35 A of phase current.
+The motor controller described in this thesis has a main CANFD communication channel, which is the best way of downloading the firmware. All STM32 microcontrollers are able to replace their firmware through a few different buses with onboard factory programmed bootloaders. However, these bootloaders are placed in ROM memory and cannot be customized or overwritten. This means that the custom system must be adapted to the strict rules from the microcontroller’s documentation, which is not always sufficient. On the other hand, by designing a custom bootloader, one can adapt it for the specific requirements of a particular system without relying on the factory bootloaders. This was the approach chosen in this thesis.
 
-  5.3 Thermal testing The next experiment was the thermal response of the actuator under different q axis current commands, with its output fixed to the stand. The temperature was measured with an internal thermistor built into the stator. Each test lasted for about 1.5 h, which corresponds to about five time constants of the system. The time constant was found after the initial test when the temperature of the actuator settled. All experiments were performed in 25 °C ambient temperature and the initial temperature of the motor module was 30 °C. The results are presented in Figure 5-4.
+### 4.4.11 Updating the firmware
 
-  Figure 5-4 Real and estimated motor thermal responses 80 82:4721680738   An attempt was made to analytically determine the transfer function of the system to estimate the time needed for reaching maximum allowed temperature, knowing the applied current. Based on steady state temperature value the thermal resistance was found. The time constant was obtained by measuring the time when the temperature reaches 63.2% of its steady state value. The input to the system is power loss due to Joule heating that was calculated as: 𝑃𝑙𝑜𝑠𝑠 =  3 2 𝐼 𝑅 2  (5.2)  The output is the temperature rise measured by the thermistor. The system was assumed to be first order. After implementing the temperature estimation based on this model, it was found that the thermal resistance to ambient varies significantly depending on the applied current. The most probable cause was the hot air convection phenomenon, which caused the nonlinearity. The model cannot accurately estimate the system dynamics, however it works well enough in the vicinity of the real thermal response.
+The master device communicating with a multislave system must be capable of recognizing each device based on its identification number. CANFD bus peripheral is capable of filtering the messages based on the standard 11-bit (2.0A) or extended 29-bit identification number (2.0B). This means that whenever a device that listens for messages receives a message, which identification number is out of the desired range, the message is going to be ignored on the hardware level. Using this method, the master device can poll the bus for each known ID and wait for the response. If the response is obtained, a slave device is connected to the bus and is ready to be updated. This way, each device can be polled individually, preserving the same command IDs.
 
- The thermal characteristics were used to determine the maximum continuous torque, which is the amount of torque that the motor is able to generate infinitely without reaching its thermal limit. The continuous torque of this module was determined to be 0.875 Nm. The module is able to operate at higher output torques, however, the active time is limited – 3 Nm can be generated for maximum 7 s before reaching the thermal limit (60°C).
+Each device must be aware of its CANFD address at all times, even after a power down. This is assured by placing a special block of information in the FLASH memory of the microcontroller. This block is placed in the last sector of the memory, ensuring it will not be overwritten after a firmware update. At startup, the CANFD peripheral of each module is initialized with different address read from FLASH memory.
 
-  5.4 Parameter identification and decoupling Besides the torque test bench tests, other experiments were also performed. As mentioned earlier, the module is able to identify the motor parameters such as phase resistance and inductance in the d and q axes. To validate the automatic inductance measurements, a RLC meter was used, which features 0.5% of the base accuracy. For measuring the phase resistance, the method of pushing a constant current was implemented and the respective voltage drop across the windings was recorded. Each measurement, both automatic and manual, was repeated 10 times for increased accuracy. Table 5-1 presents the experiment outcome.
+The bootloader itself is placed on the beginning of FLASH memory. Considering the special location, it is accessed each time the microcontroller is powered on or any other reset event happens. Reset flags located in CSR register can be used to distinguish between different reset sources. Implementing this selective strategy, the bootloader waits for the firmware update command only after a software reset is detected. If a normal “power on” reset happened, the bootloader will perform an immediate jump to the user’s code. A software reset can be initiated by the device itself, when it receives a reset request through CANFD bus. This way, the bootloader is transparent to the user, but still can be easily accessed by the CANFD commands. A small delay of 500 ms could be added in case of power on reset, as it allows for entering the bootloader mode even if the main code is not functional.
 
- Table 5-1 Manual vs automatic motor parameters identification Measured quantity Phase resistance [m] D axis inductance [µH] Q axis inductance [µH]  Manual measurement 122.8±9.26e-4 34.4±1.02e-6 48.9±1.58e-6 81  83:1100382350  Automatic measurement 118.2±2.54e-4 32.9±1.41e-6 40.8±6.72e-5   The resistance identification feature works correctly, however, the motor has to be kept at a certain temperature for the results to be reproducible. The inductance, on the other hand, varies by roughly a few μH in regard to the RLC meter measurement. This is especially visible in the q axis inductance measurement and most probably it is caused by the rotor being unaligned with the q axis. In order to perform a high accuracy measurement, the rotor should be perfectly fixed with respect to the stator, as the q axis current generates torque and causes the rotor to rotate if not fixed. Even though, the range of measurement is correct, when compared to the RLC meter measurements. Having implemented the basic parameter identification, it is possible to implement an automatic PI controller tuning routine based on the identified parameters.
+The main firmware code is placed above the bootloader starting from a predefined memory address. After “power on” reset, the bootloader jumps directly to the specified address and the user application execution is initiated. The application is capable of CANFD communication. When it receives a reset command from the Python script running on the master computer, it performs a software reset. The bootloader is entered, the software reset is recognized, and the bootloader waits 5 seconds for a confirmation command. If the command is not acquired, the bootloader jumps back to the user application. However, if the command is received, the bootloader acknowledges the computer, it is functional and waits for erase and program commands. The erase command is telling the bootloader how much flash memory has to be erased to fit the user code. After erasing the memory, the bootloader receives 32 byte packets of firmware. The data is gathered until a 512 byte buffer is filled. Then a CRC (“Cyclic Redundancy Check”) code is sent by the master computer and the microcontroller calculates its own buffer CRC code. The codes are compared on the slave device and only when they are equal a write to the flash memory is performed. The procedure continues until the end of the binary file on the host computer is reached. At the end, a jump command is executed and the user application is started.
 
- The measured motor inductance was also used for decoupling technique and comparison with the simulated results in Figure 4-12. Measured waveforms are presented in Figure 5-5.
+### 4.4.12 Control application
 
-  Figure 5-5 Validation of the d/q axes decoupling technique on the real controller Presumably, the influence of q axis current change on the d axis current after implementing the decoupling technique is reduced. Although, similarly to the simulated results, 82 84:3909937350   the improvement is not crucial to the controller operation and would be more visible on a higher inductance motor.
+A simple Python application was created to communicate with individual modules, update their firmware, and check for faults (Figure 4-44). The app was written using TKinter library for window applications in Python.
 
-  5.5 High level control The actuator’s controller is able to perform high level impedance control according to (4.14) formula. In order to validate the implemented control algorithm, a test was carried out in which the spring and damper constants were varied. It was expected to observe a similar behavior as a spring-damper-mass system, i.e.: undamped sinusoidal oscillation with 𝑘𝑠 > 0 and 𝑘𝑑 = 0, exponentially decaying sinusoidal oscillation with 𝑘𝑠 > 0 and 𝑘𝑑_𝑐𝑟𝑖𝑡𝑖𝑐𝑎𝑙 > 𝑘𝑑 > 0, and critically damped response with 𝑘𝑠 > 0 and 𝑘𝑑 ≥ 𝑘𝑑_𝑐𝑟𝑖𝑡𝑖𝑐𝑎𝑙 .
+Figure 4-44 Service PC application
 
-  Figure 5-6 Undamped sinusoidal response During each experiment, the motor module was fixed to the test bench and it was commanded a position step from 0 to 2 radians. The 𝑘𝑠 was set to a constant value of 2  𝑁𝑚 𝑟𝑎𝑑  ,  whereas the 𝑘𝑑 was varied between each run. A low value of 𝑘𝑠 allowed for low frequency oscillations that are easier to capture, however it also contributes to a higher steady state error that can be observed in the following figures. Figure 5-6 presents the case when 𝑘𝑑 is equal to 0. Supposedly, the response is unstable, resulting in continuous sinusoidal oscillations.
+After startup, the user has to choose the correct COM port and speed (baudrate) the CANFD converter is operating at. When the “Open port” button is clicked, the app scans for any connected devices and lists them in the drop down list. The chosen ID number is the currently considered actuator. The upper part of the application is used for updating the actuator firmware, by choosing the binary file and clicking “Flash device” button. The lower part is used for diagnostics and calibration routines. The actuator can be operated in the spring-damper mode by varying the target position, spring constant, and damping constant. The user has the ability to calibrate the encoder offset (align encoder zero position with the d axis), calibrate for eccentric magnet-encoder placement, measure motor internal parameters (inductance, resistance), and calibrate current measurements offsets. There is an option for displaying errors that may occur during calibration routines or normal operation. The errors can be cleared if desired. It is also possible to modify the initial position from which the actuator starts its operation, as well as the physical boundaries the shaft has to stay in. Below the buttons, there is a graph that can be used to view the actual position, velocity, d/q axis currents, DC bus voltage, and motor temperature. The terminal is located on the very bottom of the app window and is used for displaying calibration results, information, and error messages.
 
- 83 85:8159613250    Figure 5-7 Damped sinusoidal response The next experiment run (Figure 5-7) was obtained by commanding a 𝑘𝑑 = 0.01  𝑁𝑚∙𝑠 𝑟𝑎𝑑  . The  resultant response is an exponentially decaying sinusoid. A certain amount of steady state error can be noticed.
+# 5 RESULTS
 
-  Figure 5-8 Critically damped response 84 86:4846046331   The last response is critically damped, which results in no oscillations (Figure 5-8). At the same time, the steady state error is much larger than in previous scenarios. This can be mitigated in some limited range by increasing 𝑘𝑠 , however oscillations may be introduced. A video of actuator operation in the spring damper mode can be found in Appendix 3.
+## 5.1 Initial waveform validation
 
- The impedance control is a useful technique, when a certain level of compliance with the environment is expected. Moreover, it allows for better impact mitigation in comparison to position-controlled actuators.
+After completing the hardware and software part of the project, the module was tested. Initially, the actual voltage/current waveforms were compared with the simulated ones to check if everything works as expected. The motor was spun with a nonzero q axis (2 A) current and loaded with an external constant torque to actually observe the phase currents.
 
-  5.6 Summary and future work The module met the functionality requirements stated at the beginning of this thesis. It is easily backdrivable, due to low gear ratio gearbox and thus a certain level of compliance can be achieved. High precision torque output, which is directly proportional to the q axis current allows for commanding as well as reading torques. The module features high maximum torque considering its mass and volume. Moreover, high torque bandwidth can be achieved thanks to a high frequency execution of the FOC algorithm and no compliant elements used in the actuators drivetrain. The aluminum case forms a strong structural shell, protecting the internal components and is used as a heatsink. The actuator was repeatedly tested and no mechanical failures were observed. It is rigid and resistant to shock. Main actuator parameters are listed in Table 5-2.
+Figure 5-1 Voltage and current waveforms recorded from the real hardware
 
- Table 5-2 Actuator parameters Dimensions  36 mm x 59 mm  Mass  210 g  Maximum peak torque  3 Nm  Maximum continuous torque  0.875 Nm  Maximum speed (15V)  30 rad/s  Torque control bandwidth  2 kHz  Gear ratio  4.5:1  Supply voltage  10-24 V  Maximum phase current  35A  85 87:4007903377   At the moment, the most problematic aspect is the backlash that excludes the module from applications such as robotic manipulators or haptic devices. The application in the walking robot’s legs is not that demanding, in regard to positioning accuracy, so the module can be successfully implemented there. The gearbox can be easily replaced if needed, without influencing the rest of the module. To further validate the actuator robustness, a prototype of a single quadruped robot led is going to be built. The leg is going to be mounted on a vertical stand with linear rails and programmed to perform repetitive jumps. This is the most demanding test as it simulates the harsh conditions likely to occur in a walking robot.
+Waveforms presented in Figure 5-1 are similar to the simulated ones (Figure 4-11). There are some distortions that result from not uniform motor load, however the overall shape is correct. The SVPWM modulation is clearly noticeable in the line-to-line voltages, whereas the currents are sinusoids, limited by the setpoint q axis current.
 
- In the author’s opinion, the module achieved the low-cost goal. It utilizes easily accessible materials, hobby grade brushless motor, and relatively simple manufacturing processes, achieving satisfactory results. The material cost, per single module is presented in Table 5-3.
+## 5.2 Torque transducer test bench
 
- Table 5-3 Estimated material cost of a single module Name  Estimated cost [PLN]  1  PCB components  140  2  4-layer PCB  20  3  Aluminum stock  25  4  Electric drill gearbox  20  5  Bearings  35  6  QM5006 motor  90  7  Pins, screws, cables  25  Sum  355  Although the material cost is low, the amount of time and effort spent on the CNC machine has to be taken into consideration. This is why it is hard to estimate the real cost of a single actuator. Even though, to the author’s knowledge, there are no commercial brushless based low gear ratio actuators with similar form factor.
+To measure the actuator torque capability, a simple torque test stand was built. The torque sensor used on the stand is a dynamic torque transducer with load capacity up to 5 Nm. It is mounted in the center of the board and can be used as both a static and dynamic sensor. The actuators are equipped with additional 8 mm output shafts. CNC precision couplers are used for connecting the actuator shafts and torque transducer shaft. The torque sensor outputs a voltage signal that is proportional to the torque acting on the shaft.
 
- The future work includes building single, three-degrees-of-freedom leg (Figure 5-9) and testing it on a vertical linear rail stand. Eventually, the actuators are going to be used in a small 86 88:7428383977   size, four-legged robot, when fully tested and proven to be reliable. Figure 5-9 presents the 3d model of a single robot limb.
+Figure 5-2 Static torque measurement stand
 
-  Figure 5-9 Future 3DoF quadruped robot leg render  87 89:8323416263    LITERATURE [1]  B. Katz, J. D. Carlo, and S. Kim, “Mini Cheetah: A Platform for Pushing the Limits of  Dynamic Quadruped Control,” in 2019 International Conference on Robotics and Automation (ICRA), pp. 6295–6301, 2019.
+Torque capability measurement was the first test performed on the test bench. One shaft end of the torque transducer was fixed to the stand to prevent it from rotating, while the other was coupled to the examined actuator. The motor module was commanded with gradually increasing q axis current, and cooled down to room temperature between the following current steps to minimize the influence of changing motor parameters due to increased temperature. The gathered data allowed for creating a graph of the output actuator torque vs q axis current (Figure 5-3).
+
+Figure 5-3 Torque vs q current characteristic
+
+The torque constant was determined from the linear region of the graph. A linear fit was performed to the 0-22A region, which resulted in a coefficient of determination of 0.997.
+
+>    𝜏 = (0.103 ± 0.00088)𝐼𝑞 + (0.110 ± 0.0113)   (5.1)
+
+The torque constant is simply the slope of the linear fit (5.1), which is equal to 0.103 𝑁𝑚/𝐴. The saturation region started to show up on the graph when the commanded current exceeded 22 A. In this region, the motor can operate up to only a few seconds without reaching the temperature limit. Short high current bursts can still be performed. These are especially useful when jumping or moving in a very dynamic manner. Maximum torque of the module was determined to be around 3 Nm at 35 A of phase current.
+
+## 5.3 Thermal testing
+
+The next experiment was the thermal response of the actuator under different q axis current commands, with its output fixed to the stand. The temperature was measured with an internal thermistor built into the stator. Each test lasted for about 1.5 h, which corresponds to about five time constants of the system. The time constant was found after the initial test when the temperature of the actuator settled. All experiments were performed in 25 °C ambient temperature and the initial temperature of the motor module was 30 °C. The results are presented in Figure 5-4.
+
+Figure 5-4 Real and estimated motor thermal responses
+
+An attempt was made to analytically determine the transfer function of the system to estimate the time needed for reaching maximum allowed temperature, knowing the applied current. Based on steady state temperature value the thermal resistance was found. The time constant was obtained by measuring the time when the temperature reaches 63.2% of its steady state value. The input to the system is power loss due to Joule heating that was calculated as:
+
+>    𝑃𝑙𝑜𝑠𝑠 =  3 2 𝐼 𝑅 2  (5.2)
+
+The output is the temperature rise measured by the thermistor. The system was assumed to be first order. After implementing the temperature estimation based on this model, it was found that the thermal resistance to ambient varies significantly depending on the applied current. The most probable cause was the hot air convection phenomenon, which caused the nonlinearity. The model cannot accurately estimate the system dynamics, however it works well enough in the vicinity of the real thermal response.
+
+The thermal characteristics were used to determine the maximum continuous torque, which is the amount of torque that the motor is able to generate infinitely without reaching its thermal limit. The continuous torque of this module was determined to be 0.875 Nm. The module is able to operate at higher output torques, however, the active time is limited – 3 Nm can be generated for maximum 7 s before reaching the thermal limit (60°C).
+
+## 5.4 Parameter identification and decoupling
+
+Besides the torque test bench tests, other experiments were also performed. As mentioned earlier, the module is able to identify the motor parameters such as phase resistance and inductance in the d and q axes. To validate the automatic inductance measurements, a RLC meter was used, which features 0.5% of the base accuracy. For measuring the phase resistance, the method of pushing a constant current was implemented and the respective voltage drop across the windings was recorded. Each measurement, both automatic and manual, was repeated 10 times for increased accuracy. Table 5-1 presents the experiment outcome.
+
+Table 5-1 Manual vs automatic motor parameters identification
+
+Measured quantity Manual measurement Automatic measurement
+
+Phase resistance [m] 122.8±9.26e-4 118.2±2.54e-4
+
+D axis inductance [µH] 34.4±1.02e-6 32.9±1.41e-6
+
+Q axis inductance [µH] 48.9±1.58e-6 40.8±6.72e-5
+
+The resistance identification feature works correctly, however, the motor has to be kept at a certain temperature for the results to be reproducible. The inductance, on the other hand, varies by roughly a few μH in regard to the RLC meter measurement. This is especially visible in the q axis inductance measurement and most probably it is caused by the rotor being unaligned with the q axis. In order to perform a high accuracy measurement, the rotor should be perfectly fixed with respect to the stator, as the q axis current generates torque and causes the rotor to rotate if not fixed. Even though, the range of measurement is correct, when compared to the RLC meter measurements. Having implemented the basic parameter identification, it is possible to implement an automatic PI controller tuning routine based on the identified parameters.
+
+The measured motor inductance was also used for decoupling technique and comparison with the simulated results in Figure 4-12. Measured waveforms are presented in Figure 5-5.
+
+Figure 5-5 Validation of the d/q axes decoupling technique on the real controller
+
+Presumably, the influence of q axis current change on the d axis current after implementing the decoupling technique is reduced. Although, similarly to the simulated results, the improvement is not crucial to the controller operation and would be more visible on a higher inductance motor.
+
+## 5.5 High level control
+
+The actuator’s controller is able to perform high level impedance control according to (4.14) formula. In order to validate the implemented control algorithm, a test was carried out in which the spring and damper constants were varied. It was expected to observe a similar behavior as a spring-damper-mass system, i.e.: undamped sinusoidal oscillation with 𝑘𝑠 > 0 and 𝑘𝑑 = 0, exponentially decaying sinusoidal oscillation with 𝑘𝑠 > 0 and 𝑘𝑑_𝑐𝑟𝑖𝑡𝑖𝑐𝑎𝑙 > 𝑘𝑑 > 0, and critically damped response with 𝑘𝑠 > 0 and 𝑘𝑑 ≥ 𝑘𝑑_𝑐𝑟𝑖𝑡𝑖𝑐𝑎𝑙 .
+
+Figure 5-6 Undamped sinusoidal response
+
+During each experiment, the motor module was fixed to the test bench and it was commanded a position step from 0 to 2 radians. The 𝑘𝑠 was set to a constant value of 2  𝑁𝑚 𝑟𝑎𝑑  ,  whereas the 𝑘𝑑 was varied between each run. A low value of 𝑘𝑠 allowed for low frequency oscillations that are easier to capture, however it also contributes to a higher steady state error that can be observed in the following figures. Figure 5-6 presents the case when 𝑘𝑑 is equal to 0. Supposedly, the response is unstable, resulting in continuous sinusoidal oscillations.
+
+Figure 5-7 Damped sinusoidal response
+
+The next experiment run (Figure 5-7) was obtained by commanding a 𝑘𝑑 = 0.01  𝑁𝑚∙𝑠 𝑟𝑎𝑑  . The  resultant response is an exponentially decaying sinusoid. A certain amount of steady state error can be noticed.
+
+Figure 5-8 Critically damped response
+
+The last response is critically damped, which results in no oscillations (Figure 5-8). At the same time, the steady state error is much larger than in previous scenarios. This can be mitigated in some limited range by increasing 𝑘𝑠 , however oscillations may be introduced. A video of actuator operation in the spring damper mode can be found in Appendix 3.
+
+The impedance control is a useful technique, when a certain level of compliance with the environment is expected. Moreover, it allows for better impact mitigation in comparison to position-controlled actuators.
+
+## 5.6 Summary and future work
+
+The module met the functionality requirements stated at the beginning of this thesis. It is easily backdrivable, due to low gear ratio gearbox and thus a certain level of compliance can be achieved. High precision torque output, which is directly proportional to the q axis current allows for commanding as well as reading torques. The module features high maximum torque considering its mass and volume. Moreover, high torque bandwidth can be achieved thanks to a high frequency execution of the FOC algorithm and no compliant elements used in the actuators drivetrain. The aluminum case forms a strong structural shell, protecting the internal components and is used as a heatsink. The actuator was repeatedly tested and no mechanical failures were observed. It is rigid and resistant to shock. Main actuator parameters are listed in Table 5-2.
+
+Table 5-2 Actuator parameters
+
+Dimensions  36 mm x 59 mm
+
+Mass  210 g
+
+Maximum peak torque  3 Nm
+
+Maximum continuous torque  0.875 Nm
+
+Maximum speed (15V)  30 rad/s
+
+Torque control bandwidth  2 kHz
+
+Gear ratio  4.5:1
+
+Supply voltage  10-24 V
+
+Maximum phase current  35A
+
+At the moment, the most problematic aspect is the backlash that excludes the module from applications such as robotic manipulators or haptic devices. The application in the walking robot’s legs is not that demanding, in regard to positioning accuracy, so the module can be successfully implemented there. The gearbox can be easily replaced if needed, without influencing the rest of the module. To further validate the actuator robustness, a prototype of a single quadruped robot led is going to be built. The leg is going to be mounted on a vertical stand with linear rails and programmed to perform repetitive jumps. This is the most demanding test as it simulates the harsh conditions likely to occur in a walking robot.
+
+In the author’s opinion, the module achieved the low-cost goal. It utilizes easily accessible materials, hobby grade brushless motor, and relatively simple manufacturing processes, achieving satisfactory results. The material cost, per single module is presented in Table 5-3.
+
+Table 5-3 Estimated material cost of a single module
+
+Name  Estimated cost [PLN]
+
+PCB components  140
+
+4-layer PCB  20
+
+Aluminum stock  25
+
+Electric drill gearbox  20
+
+Bearings  35
+
+QM5006 motor  90
+
+Pins, screws, cables  25
+
+Sum  355
+
+Although the material cost is low, the amount of time and effort spent on the CNC machine has to be taken into consideration. This is why it is hard to estimate the real cost of a single actuator. Even though, to the author’s knowledge, there are no commercial brushless based low gear ratio actuators with similar form factor.
+
+The future work includes building single, three-degrees-of-freedom leg (Figure 5-9) and testing it on a vertical linear rail stand. Eventually, the actuators are going to be used in a small size, four-legged robot, when fully tested and proven to be reliable. Figure 5-9 presents the 3d model of a single robot limb.
+
+Figure 5-9 Future 3DoF quadruped robot leg render
+
+# LITERATURE
+
+[1]  B. Katz, J. D. Carlo, and S. Kim, “Mini Cheetah: A Platform for Pushing the Limits of  Dynamic Quadruped Control,” in 2019 International Conference on Robotics and Automation (ICRA), pp. 6295–6301, 2019.
 
  [2]  P. M. Wensing, A. Wang, S. Seok, D. Otten, J. Lang, and S. Kim, “Proprioceptive  Actuator Design in the MIT Cheetah: Impact Mitigation and High-Bandwidth Physical Interaction for Dynamic Legged Robots,” IEEE Transactions on Robotics, vol. 33, no. 3, pp. 509–522, 2017.
 
@@ -947,15 +1090,61 @@ Knowing the maximum phase current and supply voltage is a good starting point fo
 
  [18]  TexasInstruments, InstaSPIN-FOC and InstaSPIN-MOTION User’s Guide, 2013.
 
-  [19]  L. Dixon, “Control Loop Cookbook,” 2001.
+ [19]  L. Dixon, “Control Loop Cookbook,” 2001.
 
-  [20]  M. D. Waugh, “Design solutions for DC bias in multilayer ceramic capacitors,”  Electronic Engineering Times, pp. 34–36, 2010.
+ [20]  M. D. Waugh, “Design solutions for DC bias in multilayer ceramic capacitors,”  Electronic Engineering Times, pp. 34–36, 2010.
 
  [21]  B. G. Katz, “Low Cost, High Performance Actuators for Dynamic Robots,” Master’s  thesis, MASSACHUSETTS INSTITUTE OF TECHNOLOGY, June 2016.
 
  [22]  S. Kalouche, “Design for 3D Agility and Virtual Compliance using Proprioceptive  Force Control in Dynamic Legged Robots,” Master’s thesis, Carnegie Mellon University, Pittsburgh, PA, August 2016.
 
- [23]  H. Johnson and M. Graham, High-speed Digital Design: A Handbook of Black Magic.
+ [23]  H. Johnson and M. Graham, High-speed Digital Design: A Handbook of Black Magic. Prentice Hall Modern Semiconductor Design, Prentice Hall, 1993.
+ 
+# Internet resources:
 
-  Prentice Hall Modern Semiconductor Design, Prentice Hall, 1993.
+[I1] http://cyberneticzoo.com/walking-machines/1979-6-legged-walking-machine-efimovet-al-russian/ (Last accessed on 2020-10-17)
 
+[I2] http://www.ai.mit.edu/projects/leglab/robots/3D_hopper/3D_hopper.html (Last accessed on 2020-10-17)
+
+[I3] MJ ESPORTS AND ENTERTAINMENT, “Boston Dynamics Robot Dog Inspects SpaceX Site in Texas” https://ten15am.org/boston-dynamics-robot-dog-inspects-spacex-sitein-texas/ (Last accessed on 2020-10-17)
+
+[I4] BBC news, “Coronavirus: Robot Dog Enforces Social Distancing in Singapore Park” https://www.bbc.com/news/av/technology-52619568 (Last accessed on 2020-10-17)
+
+[I5] NYPost, “NYPD Deploys Robot Dog After Woman Shot During Brooklyn Parking Dispute,” 2020. https://nypost.com/2020/10/29/nypd-deploys-robot-dog-after-brooklynparking-dispute-shooting/ (Last accessed on 2020-10-17)
+
+[I6] https://robots.ieee.org/robots/spotmini/?gallery=photo2 (Last accessed on 2020-10-17)
+
+[I7] https://www.youtube.com/watch?v=2E82o2pP9Jo&ab_channel=Stanford (Last accessed on 2020-10-17)
+
+[I8] http://echord.eu/hyqreal.html (Last accessed on 2020-10-17)
+
+[I9] https://www.anybotics.com/anymal-legged-robot/ (Last accessed on 2020-10-17)
+
+[I10] https://www.unitree.com/components/a1_motor (Last accessed on 2020-10-17)
+
+[I11] https://rsl.ethz.ch/robots-media/actuators/anydrive.html (Last accessed on 2020-10-17)
+
+[I12] https://innfos.com/pc/nu80dtl_en (Last accessed on 2020-10-17)
+
+[I13] MIT Biomimetic Robotics Lab, “Optimal Actuator Design.” https://biomimetics.mit.edu/research/optimal-actuator-design (Last accessed on 2020-10-17)
+
+[I14] Himodels company, “Sunnysky 4108 product page.” http://www.himodel.com/m/electric/SUNNYSKY_X4108S_380KV_Outrunner_Brushless_Motor_for_Multirotor_Aircraft.html (Last accessed on 2020-10-17)
+
+[I15] Gearbest, “QM5006 product page.” https://www.gearbest.com/motor/pp_009620387106.html (Last accessed on 2020-10-17)
+
+[I16] Hobbyking company, “Turnigy 4822 product page.” https://hobbyking.com/en_us/turnigy-multistar-4822-690kv-22pole-multi-rotor-outrunner.html?___store=en_us (Last accessed on 2020-10-17)
+
+# APPENDIX
+
+1. Motor controller schematic
+
+2. Assembled actuator CAD drawing
+
+3. Actuator operation video https://youtu.be/tROU9AZ5b_Q
+
+4. CNC milling time lapse video https://youtu.be/gy70JmTabos
+
+5. A CD containing:
+    - Actuator’s source code
+    - PC service application source code
+    - Video of actuator operation 
