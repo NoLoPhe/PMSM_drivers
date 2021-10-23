@@ -23,6 +23,7 @@ list of open source robotics
 |107|MIT-Humanoid-Robot|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/107_MIT_Humanoid_Robot)|
 |108|Design-and-Control-of-a-Open-Source|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/108_Design_and_Control_of_a_Open_Source)|
 |109|A-low-cost-modular-actuator-for-dynamic-robots|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/109_A_low_cost_modular_actuator_for_dynamic_robots)|
+|110|Piotr-Wasilewski-Small-size-dynamic-legged-robots|[■■■](https://github.com/NoLoPhe/PMSM_drivers/tree/study/110_Piotr_Wasilewski_Small_size_dynamic_legged_robots)|
 
 list of book robotics
 |No.|Model Name|Link|
