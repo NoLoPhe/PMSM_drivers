@@ -29,113 +29,113 @@ SUPERVISOR: Maciej Ciężkowski PhD.
 
 1  Introduction 
 
-    1.1  Motivation
+ - 1.1  Motivation
+ 
+ - 1.2  Thesis outline
     
-    1.2  Thesis outline
+ - 1.3  Existing actuators overview
     
-    1.3  Existing actuators overview
-    
-    1.4  Motor module requirements
+ - 1.4  Motor module requirements
     
 2  Electric motor basics
 
-    2.1  Farady’s and Lorentz’s law
+ - 2.1  Farady’s and Lorentz’s law
     
-    2.2  Torque production and back-EMF generation
+ - 2.2  Torque production and back-EMF generation
     
-    2.3  Physical winding connection
+ - 2.3  Physical winding connection
     
-    2.4  Total motor torque production
+ - 2.4  Total motor torque production
     
-    2.5  Permanent magnet motor types
+ - 2.5  Permanent magnet motor types
     
-    2.6  Torque production
+ - 2.6  Torque production
     
 3  Control strategy
     
-    3.1  Introduction
+ - 3.1  Introduction
     
-    3.2  Sensored and sensorless control
+ - 3.2  Sensored and sensorless control
     
-    3.3  Brushless motor reference frames 
-        
-        3.3.1  Stator reference frame
-        
-        3.3.2  Rotor reference frame
-        
-    3.4  Brushless motor control algorithms 
-    
-        3.4.1  Six step / trapezoidal / squarewave
-        
-        3.4.2  Sinusoidal
-        
-        3.4.3  Field Oriented Control (FOC)
-        
-        3.4.4  Direct Torque Control (DTC)
-        
-        3.4.5  Control techniques summary 
+ - 3.3  Brushless motor reference frames
+  
+   - 3.3.1  Stator reference frame
+   
+   - 3.3.2  Rotor reference frame
+       
+ - 3.4  Brushless motor control algorithms
+
+   - 3.4.1  Six step / trapezoidal / squarewave
+   
+   - 3.4.2  Sinusoidal
+   
+   - 3.4.3  Field Oriented Control (FOC)
+   
+   - 3.4.4  Direct Torque Control (DTC)
+   
+   - 3.4.5  Control techniques summary 
      
 4  Actuator design
     
-    4.1 Control algorithm design and simulation
+ - 4.1 Control algorithm design and simulation
+  
+   - 4.1.1  PI controllers tuning
+   
+   - 4.1.2  Simulation results
     
-        4.1.1  PI controllers tuning
+ - 4.2  Mechanical
+  
+   - 4.2.1  Motor selection
+   
+   - 4.2.2  3D model
+   
+   - 4.2.3  Manufacturing the actuator 
         
-        4.1.2  Simulation results
-    
-    4.2  Mechanical
-    
-        4.2.1  Motor selection
+ - 4.3  Electrical
+  
+   - 4.3.1  Controller electrical requirements
+   
+   - 4.3.2  Schematic and PCB design
         
-        4.2.2  3D model
+ - 4.4  Software
+  
+   - 4.4.1  Commutation routine
+   
+   - 4.4.2  Timer
         
-        4.2.3  Manufacturing the actuator 
+   - 4.4.3  ADC measurements
         
-    4.3  Electrical
-    
-        4.3.1  Controller electrical requirements
+   - 4.4.4  Position and velocity measurement
         
-        4.3.2  Schematic and PCB design
+   - 4.4.5  Encoder calibration routine
         
-    4.4  Software
-    
-        4.4.1  Commutation routine
+   - 4.4.6  Current measurement calibration 
         
-        4.4.2  Timer
+   - 4.4.7  Automatic motor parameters identification
         
-        4.4.3  ADC measurements
+   - 4.4.8  High level control
         
-        4.4.4  Position and velocity measurement
+   - 4.4.9  CANFD communication
         
-        4.4.5  Encoder calibration routine
+   - 4.4.10  Bootloader
         
-        4.4.6  Current measurement calibration 
+   - 4.4.11  Updating the firmware 
         
-        4.4.7  Automatic motor parameters identification
-        
-        4.4.8  High level control
-        
-        4.4.9  CANFD communication
-        
-        4.4.10  Bootloader
-        
-        4.4.11  Updating the firmware 
-        
-        4.4.12  Control application
+   - 4.4.12  Control application
         
 5  Results
 
-    5.1  Initial waveform validation
+ - 5.1  Initial waveform validation
     
-    5.2  Torque transducer test bench
+ - 5.2  Torque transducer test bench
     
-    5.3  Thermal testing
+ - 5.3  Thermal testing
     
-    5.4  Parameter identification and decoupling
+ - 5.4  Parameter identification and decoupling
     
-    5.5  High level control
+ - 5.5  High level control
     
-    5.6  Summary and future work
+ - 5.6  Summary and future work
     
 Literature
 
