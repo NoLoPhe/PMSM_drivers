@@ -408,139 +408,320 @@ The starting point for evaluating the three phase motor equations is the simple 
 
 where 𝑅 is the phase resistance, 𝑖 is the current, 𝜆 is the flux linkage, and 𝑒 is bEMF voltage. In terms of a 3 phase motor, the equation can be represented in a matrix form as follows:
 
->    𝑉𝐴 𝑅 [𝑉𝐵 ] = [ 0 𝑉𝐶 0  0 𝑅 0  𝐿𝐴𝐴 0 𝑖𝐴 0 ] [𝑖𝐵 ] + [𝐿𝐴𝐵 𝐿𝐴𝐶 𝑅 𝑖𝐶  𝐿𝐴𝐵 𝐿𝐵𝐵 𝐿𝐵𝐶  𝑒𝐴 𝐿𝐴𝐶 𝑑 𝑖𝐴 𝐿𝐵𝐶 ] [𝑖𝐵 ] + [𝑒𝐵 ] 𝑒𝐶 𝐿𝐶𝐶 𝑑𝑡 𝑖𝐶  (3.2)
+>    𝑉𝐴 𝑅 [𝑉𝐵 ] = [ 0 𝑉𝐶 0  0 𝑅 0  𝐿𝐴𝐴 0 𝑖𝐴 0 ] [𝑖𝐵 ] + [𝐿𝐴𝐵 𝐿𝐴𝐶 𝑅 𝑖𝐶  𝐿𝐴𝐵 𝐿𝐵𝐵 𝐿𝐵𝐶  𝑒𝐴 𝐿𝐴𝐶 𝑑 𝑖𝐴 𝐿𝐵𝐶 ] [𝑖𝐵 ]
+>    + [𝑒𝐵 ] 𝑒𝐶 𝐿𝐶𝐶 𝑑𝑡 𝑖𝐶  (3.2)
 
 where 𝐿 with a lower subscript describes either the self (identical letters) or mutual (different letters) inductances. Designing a current controller for this representation is not a trivial task as the voltages must vary depending on the rotor position to produce a constant torque. This is why it is beneficial to transform to a nonstationary frame – the rotor frame.
 
-### 3.3.2  Rotor reference frame  The rotor reference frame is fixed to the moving rotor. There are two axes – d (direct) aligned with the direction of the magnetic flux, and q (quadrature) which is rotated 90° electrical from the d axis (Figure 3-2).
+### 3.3.2  Rotor reference frame
 
-  Figure 3-2 Rotor reference frame Transforming the 3-phase quantities to this reference frame makes it much easier to analyse the motor equations and directly control the torque. This is due to the fact that in this frame the currents are rotor position invariant. The transition between coordinate systems is made with Clark (equation (3.3)) and Park (equation (3.4)) transformations [12].The first transformation is used to describe three phase stationary quantities with two orthogonal components, whereas the second fixes the coordinates to the moving rotor.
+The rotor reference frame is fixed to the moving rotor. There are two axes – d (direct) aligned with the direction of the magnetic flux, and q (quadrature) which is rotated 90° electrical from the d axis (Figure 3-2).
 
- 1 1 − 2 2 √3 √3 − 2 2 1 1 √2 √2 ]  (3.3)  cos(θ) sin(θ) 0 𝑇𝑃 = [−sin(θ) cos(θ) 0] 0 0 1  (3.4)  1 𝑇𝐶 =  √3 2  −  0 1 [√2  30 32:1014306560   The transformed voltage equations in d-q frame are presented as follows [13]: 𝑉𝑞 = 𝑅𝐼𝑞 + 𝐿𝑞  𝑑𝐼𝑞 + 𝜔𝜆𝑟 + 𝜔𝐿𝑑 𝐼𝑑 𝑑𝑡  (3.5)  𝑑𝐼𝑑 − 𝜔𝐿𝑞 𝐼𝑞 𝑑𝑡  (3.6)  𝑉𝑑 = 𝑅𝐼𝑑 + 𝐿𝑑  where 𝑉𝑞 , 𝑉𝑑 are the voltages in d/q axis, 𝑅 is the phase resistance, 𝐿𝑞 is quadrature axis inductance, Ld is direct axis inductance, 𝜔 is the electrical angular speed and 𝜆𝑟 is the total rotor flux linkage. The bEMF term is shown here in terms of the rotational velocity. In contrast to stationary coordinate system, this representation causes the torque to be constant when the 𝐼𝑑 and 𝐼𝑞 values are constant. This greatly simplifies the current control algorithm and allows to use PI controllers for each axis. Before PI controllers are implemented on each axis, coupling terms linking both (3.5) and (3.6) equations should be mitigated. It is done by introducing feedforward terms [14]: 𝑉𝑞 𝑓𝑓 = −𝜔𝐿𝑑 𝐼𝑑  (3.7)  𝑉𝑑 𝑓𝑓 = 𝜔𝐿𝑞 𝐼𝑞  (3.8)  Torque equation described with quantities expressed in rotating d-q frame can be described as follows: 𝜏=  3𝑝 𝑖 (𝜆 + 𝑖𝑑 (𝐿𝑑 − 𝐿𝑞 )) 2 𝑞 𝑟  (3.9)  The equation (3.9) is general and it includes the eventual difference in d and q axis inductances (in case of salient motors [10]) that contributes to reluctance torque. In this thesis, only surface mount permanent magnet motors are considered, so the equation can be reduced to (2.20).
+Figure 3-2 Rotor reference frame 
 
-  3.4 Brushless motor control algorithms Brushless motor control algorithms can be divided into a two categories – scalar and vector control. Scalar control bases on the idea that only the voltage magnitude and frequency can be varied directly, and it is the easiest strategy to implement. On the other hand, vector control allows for a higher level control (torque, magnetic flux), which is much more complex and offers certain advantages in comparison to the scalar methods.
+Transforming the 3-phase quantities to this reference frame makes it much easier to analyse the motor equations and directly control the torque. This is due to the fact that in this frame the currents are rotor position invariant. The transition between coordinate systems is made with Clark (equation (3.3)) and Park (equation (3.4)) transformations [12].The first transformation is used to describe three phase stationary quantities with two orthogonal components, whereas the second fixes the coordinates to the moving rotor.
 
- 3.4.1  Six step / trapezoidal / squarewave 31  33:1011624895   This algorithm is the easiest one to implement, as it is based on changing the energized windings based on the rotor position, whereas the third winding is always left undriven. It can be utilized with hall-effect sensors, serving as a low resolution rotor position sensor, or with sensorless position estimation. It does not require a lot of computational power, however, suffers from torque ripple due to rapid winding switching instants. Usually, this technique is implemented in continuously rotating motors. The amplitude of the waveforms can be controlled by varying DC bus voltage or PWM modulation.
+>    1 1 − 2 2 √3 √3 − 2 2 1 1 √2 √2 ]  (3.3)
+>    cos(θ) sin(θ) 0 𝑇𝑃 = [−sin(θ) cos(θ) 0] 0 0 1  (3.4)
+>    1 𝑇𝐶 =  √3 2  −  0 1 [√2  30 32:1014306560
 
- 3.4.2  Sinusoidal  PWM modulation allows for creating an arbitrary voltage waveform. The sinusoidal technique is implemented on inverters working with PMSM motors. Driving a sinusoidal motor with sinusoidal waveform is beneficial as the resultant torque is smooth and the torque ripple is minimized. This technique is usually implemented with hall sensors, but high resolution encoders can be also used. Similarly to six-step/trapezoidal algorithm, when Hall sensors are utilized, the motor is susceptible to stall events and cannot operate at low speeds, as the rotor position is only updated every 60° electrical, and between the Hall sensors the position is estimated. Although using a high resolution encoder is beneficial due to the high frequency position information it is able to output.
+The transformed voltage equations in d-q frame are presented as follows [13]:
 
- 3.4.3  Field Oriented Control (FOC)  The FOC algorithm (sometimes also referred to as “vector control”) is based on transforming the stator-fixed three-phase quantities to two orthogonal components fixed to the rotating rotor. This representation allows for direct torque and magnetic flux control with just two parameters (current in q and d axis). Moreover, the torque produced by the motor is proportional to q axis current, when operating in the linear range, where no saturation effects are present. The d axis current reference is usually kept at zero, in order to maximize the torque production. The FOC algorithm is superior to the methods presented earlier, however, at a cost of additional computational cost and higher system complexity.
+>    𝑉𝑞 = 𝑅𝐼𝑞 + 𝐿𝑞  𝑑𝐼𝑞 + 𝜔𝜆𝑟 + 𝜔𝐿𝑑 𝐼𝑑 𝑑𝑡  (3.5)
+>    𝑑𝐼𝑑 − 𝜔𝐿𝑞 𝐼𝑞 𝑑𝑡  (3.6)  𝑉𝑑 = 𝑅𝐼𝑑 + 𝐿𝑑
 
-  32 34:1140922064    Figure 3-3 Field oriented control scheme A general field oriented control scheme is shown in Figure 3-3. Two reference currents in the d and q axis are commanded by the high level controller and are compared with measured current values. The two PI controllers evaluate new control voltages. Feedforward terms are included in the control loop to decouple the two axes and make them independent. Calculated voltages are transformed by inverse Park and then inverse Clark transforms. Afterwards, the sinusoidally varying voltages are fed into the SVPWM [15] modulator5. In the last stage, the voltages are approximated with the hardware PWM timer. The main feedback loop performs forward Clark and Park transformations on the measured phase currents in order to calculate the real d and q axis currents. The rotor angle, essential for the transformations, is obtained with low latency magnetic encoder. As stated earlier, the d axis current reference is usually set to zero, however, when bEMF is the limiting factor for reaching high speeds, a nonzero d axis current can be commanded to decrease the magnetic field strength, and thus the bEMF. This is the, so called “field weakening” action and it allows for reaching greater rotor velocities at a cost of lower torque. This technique works best on high inductance motors, thus when the inductance is low, a lot of current is needed to influence the magnetic field, which results in high Joule heating losses.
+where 𝑉𝑞 , 𝑉𝑑 are the voltages in d/q axis, 𝑅 is the phase resistance, 𝐿𝑞 is quadrature axis inductance, Ld is direct axis inductance, 𝜔 is the electrical angular speed and 𝜆𝑟 is the total rotor flux linkage. The bEMF term is shown here in terms of the rotational velocity. In contrast to stationary coordinate system, this representation causes the torque to be constant when the 𝐼𝑑 and 𝐼𝑞 values are constant. This greatly simplifies the current control algorithm and allows to use PI controllers for each axis. Before PI controllers are implemented on each axis, coupling terms linking both (3.5) and (3.6) equations should be mitigated. It is done by introducing feedforward terms [14]:
 
- 3.4.4  Direct Torque Control (DTC)  The DTC control strategy is somewhat similar to FOC, however it does not require coordinate transformation nor PWM control. It is based on the idea of rapidly applying voltage 5  The SVPWM (Space Vector PWM) modulator is used to make the linear modulation range wider by about 15% in comparison to Sine PWM (SPMW) modulation. In result the DC bus is better utilized, the THD (Total Harmonic Distortion) is reduced and performance near overmodulation region is improved.
+>    𝑉𝑞 𝑓𝑓 = −𝜔𝐿𝑑 𝐼𝑑  (3.7)
+>    𝑉𝑑 𝑓𝑓 = 𝜔𝐿𝑞 𝐼𝑞  (3.8)
 
-  33 35:1778655388   vectors based on the setpoint torque and magnetic flux values [16]. The measured torque and magnetic flux values are estimated from the stator currents and the actual voltage vector. The DTC technique does not require a position sensor and thus is considered sensorless. It is easier to implement, however, suffers from poor low speed operation and increased torque ripple. The control scheme is presented in Figure 3-4.
+Torque equation described with quantities expressed in rotating d-q frame can be described as follows:
 
-  Figure 3-4 Direct torque control scheme 3.4.5  Control techniques summary  The choice of the most suitable algorithm was dictated by the requirements imposed on the designed actuator. Smooth low speed operation, low torque ripple, and full torque at a wide range of speeds were the most important factors. Looking at the classification above, it is obvious that the scalar control algorithms were rejected due to their poor low speed operation and torque control. Due to poor low speed operation and increased torque ripple, DTC was also rejected. The FOC algorithm was chosen as it has superior performance in this application in comparison to other described methods.
+>    𝜏=  3𝑝 𝑖 (𝜆 + 𝑖𝑑 (𝐿𝑑 − 𝐿𝑞 )) 2 𝑞 𝑟  (3.9)
 
-  34 36:7649554018    4 ACTUATOR DESIGN 4.1 Control algorithm design and simulation Prior to implementing the control strategy on a real hardware module, the algorithm was tested in a simulation environment. GeckoCIRCUITS software [17] was chosen as it is made especially for simulating power electronics. It is equipped with many electrical models such as MOSFET transistor or PMSM motor model. Pieces of control algorithm are written in JAVA scripts and put into functional blocks with inputs and outputs. Signals are used to connect different algorithm blocks to allow data exchange between them. Finally, the outcome of the simulation can be presented in graphical form using the scope widget.
+The equation (3.9) is general and it includes the eventual difference in d and q axis inductances (in case of salient motors [10]) that contributes to reluctance torque. In this thesis, only surface mount permanent magnet motors are considered, so the equation can be reduced to (2.20).
 
-  Figure 4-1 Simulation schematic The electrical part of the motor controller simulation consists of a DC bus power supply, DC bus capacitors, six MOSFET transistors, three shunt resistors, and the PMSM motor (Figure 4-1). Each elements’ parameters were set based on real hardware parameters in order to make it similar to the real hardware.
+## 3.4 Brushless motor control algorithms
 
- Software part is divided into a few functional blocks. The low level gate control block takes in a 40 kHz triangle wave and compares it with a reference voltage coming from the main control algorithm. This block is also responsible for applying dead-time in gate control signals 35 37:1981058679   to prevent shoot-through when both the upper and lower FETs are open. Next, there is a block containing the main control algorithm – forward and inverse Clark/Park transformations, two PI controllers, one for each axis, and SV modulation routine. The resulting PWM duty cycles are fed into the previously described gate control block (Figure 4-2).
+Brushless motor control algorithms can be divided into a two categories – scalar and vector control. Scalar control bases on the idea that only the voltage magnitude and frequency can be varied directly, and it is the easiest strategy to implement. On the other hand, vector control allows for a higher level control (torque, magnetic flux), which is much more complex and offers certain advantages in comparison to the scalar methods.
 
-  Figure 4-2 Measurement, FOC and PWM blocks Currents are measured in specific moments – when all three low side MOSFETs are closed (exactly the middle of the 0th sector). This assures the current is not affected by PWM modulation. Separate algorithm block is used for sampling the currents by measuring the voltage drop on low-side shunt resistors. The measurements were compared to PMSM model’s internally computed phase currents to make sure they are correct. Multiple scope widgets show the simulation results – PI controller efforts, measured d/q current values, phase currents, or rotor position. The last block – spring-damper block – is responsible for calculating the reference q axis current based on the actual position, target position, velocity, spring constant, and damping coefficient (Figure 4-3).
+### 3.4.1  Six step / trapezoidal / squarewave
 
-  Figure 4-3 Current measurements, scope and high level controller blocks  36 38:1018027039   4.1.1  PI controllers tuning  The main FOC block implements two PI current controllers. For the best possible performance, it was decided to estimate the gains instead of hand-tuning the controllers. The tuning process was based on [8] and [18]. Even though the controller is implemented on a digital microcontroller, the tuning process was carried out in the s-domain, as the RL time constant is much larger (>14x) than the system’s current sampling time. A comparison to the discrete controller regarding the performance is presented in the end of this subsection. As the motor is a surface mount permanent magnet motor, the inductances in d and q axes are going to be roughly the same. This is why the process of tuning is carried out only for a single controller, and then the same gains are applied for both d and q PI controllers.
+This algorithm is the easiest one to implement, as it is based on changing the energized windings based on the rotor position, whereas the third winding is always left undriven. It can be utilized with hall-effect sensors, serving as a low resolution rotor position sensor, or with sensorless position estimation. It does not require a lot of computational power, however, suffers from torque ripple due to rapid winding switching instants. Usually, this technique is implemented in continuously rotating motors. The amplitude of the waveforms can be controlled by varying DC bus voltage or PWM modulation.
 
- The goal is to control the current in the d and q axes with a voltage approximated by PWM modulation. Each of equations (3.6) and (3.5) can be simplified to a simple series RL circuit (Figure 4-4), as the terms containing 𝜔 are ignored, due to much slower dynamics, when compared to the electrical RL circuit alone.
+### 3.4.2  Sinusoidal
 
-  Figure 4-4 Simplified system's model The series RL circuit can be described with a continuous transfer function: 𝐺𝑅𝐿 (𝑠) =  1 𝐿𝑠 + 𝑅  (4.1) 𝑅  It is worth noting that the RL system has a pole at 𝑠 = − 𝐿 .
+PWM modulation allows for creating an arbitrary voltage waveform. The sinusoidal technique is implemented on inverters working with PMSM motors. Driving a sinusoidal motor with sinusoidal waveform is beneficial as the resultant torque is smooth and the torque ripple is minimized. This technique is usually implemented with hall sensors, but high resolution encoders can be also used. Similarly to six-step/trapezoidal algorithm, when Hall sensors are utilized, the motor is susceptible to stall events and cannot operate at low speeds, as the rotor position is only updated every 60° electrical, and between the Hall sensors the position is estimated. Although using a high resolution encoder is beneficial due to the high frequency position information it is able to output.
 
- The series PI controller structure was used (4.2), as it allows for changing the loop gain only with 𝑘𝑝 gain and moving the zero location only with 𝑘𝑖 gain. This way, the zero of the PI 37 39:9895262444   controller can be placed near the RL system’s pole in order to simplify the system’s transfer function, and the loop gain can be varied independently.
+### 3.4.3  Field Oriented Control (FOC)
 
- 𝐺𝑃𝐼 (𝑧) = 𝑘𝑝 (1 +  𝑘𝑖 ) 𝑠  (4.2)  In order to cancel the RL system’s pole 𝑘𝑖 was derived as: 𝑘𝑖 =  𝑅 𝐿  (4.3)  Substituting the QM5006 motor measured parameters the estimated 𝑘𝑖 is equal to 2875. This results in pole cancellation that can be observed on the zero-pole plot of the open loop system (Figure 4-5).
+The FOC algorithm (sometimes also referred to as “vector control”) is based on transforming the stator-fixed three-phase quantities to two orthogonal components fixed to the rotating rotor. This representation allows for direct torque and magnetic flux control with just two parameters (current in q and d axis). Moreover, the torque produced by the motor is proportional to q axis current, when operating in the linear range, where no saturation effects are present. The d axis current reference is usually kept at zero, in order to maximize the torque production. The FOC algorithm is superior to the methods presented earlier, however, at a cost of additional computational cost and higher system complexity.
 
-  Figure 4-5 Pole - zero plot of the continuous open loop system – the left hand side pole is covered with PI controller’s zero Having done the cancellation, the open loop system looks like an integrator (single pole at the origin): 𝐺𝑜𝑝𝑒𝑛 = 𝑘𝑝 (1 +  𝑘𝑝 𝑘𝑖 1 )∙ ⇒ 𝑅 𝐺𝑜𝑝𝑒𝑛 = 𝑠 𝐿𝑠 + 𝑅 (𝑘 = ) 𝐿𝑠 𝑖  38 40:5840129059  𝐿  (4.4)   The next step is to calculate the 𝑘𝑝 gain. To do that, the closed loop system transfer function is obtained: 𝐺𝑐𝑙𝑜𝑠𝑒𝑑 = The  𝑘𝑝 𝐿  𝑘𝑝 𝑘𝑝 + 𝐿𝑠  (4.5)  term is substituted with 𝑝 for simplification, and 𝑠 is substituted with 𝑗𝜔 to calculate the  magnitude of system’s response at certain corner frequency. The 𝐺(𝑗𝜔) is multiplied with its conjugate and square root of this expression is taken: 1 2  1 |𝐺(𝑗𝜔)| = √𝐺(𝑗𝜔) ∙ 𝐺(𝑗𝜔)′ = ( ) 𝜔2 1+ 2 𝑝  (4.6)  Next, the magnitude is converted to dBs: 20 log(|𝐺(𝑗𝜔)|) = −10log (1 +  𝜔2 ) 𝑝2  (4.7)  The corner frequency for a closed loop system is defined as the frequency at which the frequency response is reduced by 3dBs. If we assume 𝑝 is equal to 𝜔 the (4.7) expression yields -3dBs. As 𝑝 is really a substitution for  𝑘𝑝 𝐿  then it is possible to state that:  𝑘𝑝 = 𝐿 ∙ 𝜔𝑐𝑜𝑟𝑛𝑒𝑟  (4.8)  Again for the motor used in this thesis 𝑘𝑝 is equal to 0.502 for corner frequency of 2kHz. The corner frequency can be increased, however, one must be aware of possible side effects such as audible noise due to amplified sensor noise..
+Figure 3-3 Field oriented control scheme
 
- It is clear that any motor parameters identification errors contribute to change in the computed gains. Even though, the presented PI controller tuning process allows for more accurate gains estimation than it would have been by manual tuning.
+A general field oriented control scheme is shown in Figure 3-3. Two reference currents in the d and q axis are commanded by the high level controller and are compared with measured current values. The two PI controllers evaluate new control voltages. Feedforward terms are included in the control loop to decouple the two axes and make them independent. Calculated voltages are transformed by inverse Park and then inverse Clark transforms. Afterwards, the sinusoidally varying voltages are fed into the SVPWM [15] modulator [5]. In the last stage, the voltages are approximated with the hardware PWM timer. The main feedback loop performs forward Clark and Park transformations on the measured phase currents in order to calculate the real d and q axis currents. The rotor angle, essential for the transformations, is obtained with low latency magnetic encoder. As stated earlier, the d axis current reference is usually set to zero, however, when bEMF is the limiting factor for reaching high speeds, a nonzero d axis current can be commanded to decrease the magnetic field strength, and thus the bEMF. This is the, so called “field weakening” action and it allows for reaching greater rotor velocities at a cost of lower torque. This technique works best on high inductance motors, thus when the inductance is low, a lot of current is needed to influence the magnetic field, which results in high Joule heating losses.
 
- In order to validate the designed controller in time domain, the step response of the system was plotted (Figure 4-6).
+[5] The SVPWM (Space Vector PWM) modulator is used to make the linear modulation range wider by about 15% in comparison to Sine PWM (SPMW) modulation. In result the DC bus is better utilized, the THD (Total Harmonic Distortion) is reduced and performance near overmodulation region is improved.
 
-  39 41:6549957033    Figure 4-6 Step response of the continuous time system As can be seen the response is very dynamic, and no overshoot is present. The setpoint is reached after roughly 500us.
+### 3.4.4  Direct Torque Control (DTC)
 
- The corner frequency was validated by drawing the bode plot of the open loop system (Figure 4-7). The intersection of an open loop frequency response and the 0 dB line is equal to the open loop crossover frequency, i.e., the corner frequency of the closed loop system [19].
+The DTC control strategy is somewhat similar to FOC, however it does not require coordinate transformation nor PWM control. It is based on the idea of rapidly applying voltage vectors based on the setpoint torque and magnetic flux values [16]. The measured torque and magnetic flux values are estimated from the stator currents and the actual voltage vector. The DTC technique does not require a position sensor and thus is considered sensorless. It is easier to implement, however, suffers from poor low speed operation and increased torque ripple. The control scheme is presented in Figure 3-4.
 
-  Figure 4-7 Continuous time open loop bode plot 40 42:7851332923   By analyzing the frequency and phase response of the open loop system, it is possible to find the stability margins of the closed loop system. In this case, the gain margin is infinite (the phase never reaches -180°) and the phase margin is equal to 90°. The crossover frequency is equal to the desired one (2kHz).
+Figure 3-4 Direct torque control scheme
 
- For the sake of completeness and validation, a similar tuning process was carried out in the Z-domain by finding the discrete time equivalents of the continuous functions presented earlier. The goal was to compare the continuous and discrete time systems. The transformation form continuous to discrete time was carried out with zero order hold (ZOH) method: 𝐺 ∗ (𝑧) =  𝑧 − 1 𝐺(𝑠) 𝒵[ ] 𝑧 𝑠  (4.9)  Having done the tuning process in the Z-domain, equivalent discrete time gains were found: 𝑅𝑇  1 − 𝑒− 𝐿 𝑘𝑖 = 𝑇 𝑘𝑝 =  (4.10)  𝑅𝜔𝑐  (4.11)  𝑅𝑇  1 − 𝑒− 𝐿  𝑟𝑎𝑑𝑖𝑎𝑛𝑠  By substituting the motor parameters, corner frequency ( 𝑠𝑎𝑚𝑝𝑙𝑒 ) and sampling time (25μs), the following gains were found: 𝑘𝑝 = 0.520, 𝑘𝑖 = 2774.
+### 3.4.5  Control techniques summary
 
- Table 4-1 Discrete and continuous gains comparison Continuous  Discrete (T = 25μs)  𝑘𝑝  0.503  0.520  𝑘𝑖  2875  2774  The discrete time system was examined in a similar way as the continuous one and the results were compared.
+The choice of the most suitable algorithm was dictated by the requirements imposed on the designed actuator. Smooth low speed operation, low torque ripple, and full torque at a wide range of speeds were the most important factors. Looking at the classification above, it is obvious that the scalar control algorithms were rejected due to their poor low speed operation and torque control. Due to poor low speed operation and increased torque ripple, DTC was also rejected. The FOC algorithm was chosen as it has superior performance in this application in comparison to other described methods.
 
-  41 43:5470489815    Figure 4-8 Step response of the discrete time system The discrete step response (Figure 4-8) is very similar to the continuous time one. A slight difference can be seen in the settle time, however not a significant one.
+# 4 ACTUATOR DESIGN
 
-  Figure 4-9 Discrete time open loop Bode plot On the other hand, the discrete Bode plot is quite different from the previous continuous time one. There is a clearly visible phase drop that is increasing with the frequency approaching the sampling frequency. This is a natural feature of discrete time systems, due to nonzero 42 44:1083496869   sampling period. The discrete system has roughly 80° of phase margin, so eventually it may become unstable, unlike the ideal continuous time counterpart. The gain margin is equal to 16.8 dB.
+## 4.1 Control algorithm design and simulation
 
- 4.1.2  Simulation results  The GECKOCircuits simulation was created in order to validate the field oriented control implementation. First, it was essential to validate if the closed loop current control system is performing as expected. The PI controller gains were set according to the continuous time system (second column of Table 4-1) and the motor parameters were set according to the QM5006 motor measured values. The virtual motor was stalled by setting a high friction coefficient and a current step was commanded in the q axis. The resulting response was recorded (Figure 4-10)  Figure 4-10 Simulated current step response The recorded response is almost identical with the responses from Figure 4-6 and Figure 4-8.
+Prior to implementing the control strategy on a real hardware module, the algorithm was tested in a simulation environment. GeckoCIRCUITS software [17] was chosen as it is made especially for simulating power electronics. It is equipped with many electrical models such as MOSFET transistor or PMSM motor model. Pieces of control algorithm are written in JAVA scripts and put into functional blocks with inputs and outputs. Signals are used to connect different algorithm blocks to allow data exchange between them. Finally, the outcome of the simulation can be presented in graphical form using the scope widget.
 
- The settle time is again about 500us. Having checked the current controllers implementation, it was possible to validate other factors.
+Figure 4-1 Simulation schematic
 
- Figure 4-11 presents the motor line-to-line voltages and phase currents. The SVPWM modulation is clearly visible in the voltage waveforms, whereas the currents are purely sinusoidal. To actually observe the currents, the motor had to be loaded with an external 43 45:2144537657   constant torque. In this case, 0.5 Nm was applied and the motor was rotated in the direction counteracting the external torque.
+The electrical part of the motor controller simulation consists of a DC bus power supply, DC bus capacitors, six MOSFET transistors, three shunt resistors, and the PMSM motor (Figure 4-1). Each elements’ parameters were set based on real hardware parameters in order to make it similar to the real hardware.
 
-  Figure 4-11 Line to line motor voltages and the corresponding phase currents The next step was to determine the transient behaviour when the motor was rapidly changing the direction of rotation. This experiment was divided into two simulation rounds – with and without d/q axis decoupling.
+Software part is divided into a few functional blocks. The low level gate control block takes in a 40 kHz triangle wave and compares it with a reference voltage coming from the main control algorithm. This block is also responsible for applying dead-time in gate control signals to prevent shoot-through when both the upper and lower FETs are open. Next, there is a block containing the main control algorithm – forward and inverse Clark/Park transformations, two PI controllers, one for each axis, and SV modulation routine. The resulting PWM duty cycles are fed into the previously described gate control block (Figure 4-2).
 
-  Figure 4-12 Currents in d and q axis when sudden change of rotation direction occurs. The decoupling effect is indicated by the red circle.
+Figure 4-2 Measurement, FOC and PWM blocks
 
- 44 46:8305417276   There are four quantities visible in Figure 4-12: d set/q set which, correspond to the commanded currents in d and q axis, respectively, and d read/q read which correspond to the measured currents. It is crucial to note that the motor is spinning freely, i.e., it is not loaded with external torque. This is why the q axis current is not reaching the setpoint current value as it is constrained by the maximum motor rotational velocity and cannot accelerate further to keep the setpoint current. The test cycle is started by commanding a positive q axis current. The motor accelerates to its maximum speed, the measured q axis current decreases and after about 80 ms the q axis commanded current is reversed. This causes the motor to deaccelerate rapidly and accelerate in the opposite direction. It is this exact moment, when the d axis current is affected by the coupling term −𝜔𝐿𝑞 𝐼𝑞 from equation (3.6).
+Currents are measured in specific moments – when all three low side MOSFETs are closed (exactly the middle of the 0th sector). This assures the current is not affected by PWM modulation. Separate algorithm block is used for sampling the currents by measuring the voltage drop on low-side shunt resistors. The measurements were compared to PMSM model’s internally computed phase currents to make sure they are correct. Multiple scope widgets show the simulation results – PI controller efforts, measured d/q current values, phase currents, or rotor position. The last block – spring-damper block – is responsible for calculating the reference q axis current based on the actual position, target position, velocity, spring constant, and damping coefficient (Figure 4-3).
 
- In the coupled case (upper part of Figure 4-12) the d axis current is explicitly affected by the q current change. However, with decoupling implemented by introducing feedforward terms, the axes should become independent. This can be observed on the lower part of Figure 4-12. The influence of q axis current on the d axis was mitigated. The decoupling is especially crucial when dealing with high inductance motors. In this case it could be omitted, however, for the sake of completeness and universality the controller is able to perform d/q axis decoupling based on measured inductance values.
+Figure 4-3 Current measurements, scope and high level controller blocks
 
- The simulated waveforms served as a reference for further software implementation on real hardware and allowed for finding possible flaws and controller misbehaviours.
+### 4.1.1  PI controllers tuning
 
-  4.2 Mechanical 4.2.1  Motor selection  The assumption was to use only low cost hobby brushless motors. To make the module as packed as possible, it was essential to pick a motor with a low profile and the largest possible stator diameter, below 45 mm. The last restriction was dictated by the size of the gearbox and its load capacity. Initially, three motors were chosen - Sunnysky X4108s [I14], QM5006 [I15], and Turnigy 4822 [I16]. Then the motors were compared based on the available parameters.
+The main FOC block implements two PI current controllers. For the best possible performance, it was decided to estimate the gains instead of hand-tuning the controllers. The tuning process was based on [8] and [18]. Even though the controller is implemented on a digital microcontroller, the tuning process was carried out in the s-domain, as the RL time constant is much larger (>14x) than the system’s current sampling time. A comparison to the discrete controller regarding the performance is presented in the end of this subsection. As the motor is a surface mount permanent magnet motor, the inductances in d and q axes are going to be roughly the same. This is why the process of tuning is carried out only for a single controller, and then the same gains are applied for both d and q PI controllers.
 
- The KV parameter and phase resistance were used to estimate the motor constant, which is the best metric to compare motors with each other. Equation (4.12) is the formula that was used for torque constant derivation: 𝐾𝑡 =  3 1 60 1 ∙ ∙ ∙ 2 √3 2𝜋 𝐾𝑉 45  47:1051837796  (4.12)   3  where 2 factor indicates a sinusoidal motor is considered, line and phase quantities and  60 2𝜋  1 √3  is for transforming between line to  is used for converting rpm to rad/s. When phase resistance is  known, it is possible to calculate the motor constant: 𝐾𝑚 =  𝐾𝑡  (4.13)  √𝑅  Both read and estimated parameters are listed in Table 4-2.
+The goal is to control the current in the d and q axes with a voltage approximated by PWM modulation. Each of equations (3.6) and (3.5) can be simplified to a simple series RL circuit (Figure 4-4), as the terms containing 𝜔 are ignored, due to much slower dynamics, when compared to the electrical RL circuit alone.
 
- Table 4-2 Motor comparison  Parameter  Sunnysky X4108s  QM5006  Turningy 4822  Outer diameter (mm)  46.1  47.5  47.5  Mass (g)  113  87  100  Height (mm)  25.5  20  25  KV rating  380  350  690  Pole pairs  12  14  11  Torque constant (Nm/A)  0.0217  0.0236  0.0119  Motor constant (Nm/√W)  0.0440  0.0492  0.0371  Motor constant per 1 gram of motor mass  0.00039  0.00057  0.00037  Phase resistance ()  0.122  0.117  0.052  Price (USD $)  24.7  25.0  32.3  Presenting a superior motor constant, lower price, and lowest profile height among other motors, the QM5006 motor was chosen. After purchasing, the motor was tested if the estimated parameters match the real measured values. The motor was spun with an electric drill and the resultant line-to-line bEMF voltage signal was recorded. The KV parameter was estimated from the frequency and peak-to-peak voltage. Then the phase resistance was obtained by measuring the voltage drop across the two phases with a known current flowing through them. The measured parameters are listed in Table 4-3.
+Figure 4-4 Simplified system's model
 
- 46 48:6930558800   Table 4-3 Comparison between specification sheet and measured motor parameters Parameter  Specification (estimated)  Measured  Outer diameter (mm)  47.5  47.6  Mass (g)  87  92  Height (mm)  20  20.1  KV rating  350  293  Torque constant (Nm/A)  0.0236  0.028  Motor constant (Nm/√W)  0.0492  0.056  Motor constant per 1 gram of motor mas  0.00057  0.00037  Phase resistance ()  0.117  0.1153  There is a slight difference in the measured and estimated values of torque constant and motor constant. This might be the result of different magnet strength or inaccurate data posted in the motor specification. Additionally, the shape of the induced bEMF voltage signal was found to be sinusoidal, which indicates the motor is PMSM type. This was a desired feature as it works in favor when FOC control algorithm is used.
+The series RL circuit can be described with a continuous transfer function:
 
- 4.2.2  3D model  The main assumption was to create a lightweight actuator, robust to possible impacts and resistant to higher temperatures generated by the loaded brushless motor. Aluminum was chosen as the main structural material, as it is relatively lightweight, is not susceptible to elevated temperatures, and can be milled easily. It is also cheap, easily accessible and can be purchased in a convenient form for milling. The actuator was designed in SolidWorks environment. Existing parts such as motor and the gearbox were measured and modelled, whereas the others were made from scratch in the SolidWorks program.
+>    𝐺𝑅𝐿 (𝑠) =  1 𝐿𝑠 + 𝑅  (4.1)
 
-  47 49:6772940975    Figure 4-13 Exploded view of the actuator The gearbox consists of the internal gear, planet gears with pins, a central sun gear, two aluminum parts serving as planet carriers, two thin-wall bearings, and the outer shell (Figure 4-14). The 4.5:1 gear ratio gearbox is designed in such a way it can be removed as a whole and replaced. This is especially useful when any type of failure occurs. The internal gear has four tabs that are used for locking the gear in the gearbox shell part. Two bearings are press-fitted into the aluminum gearbox housing. Planet gears are rotating on three stainless steel pins, which are pressed fitted into the lower planet carrier. The top carrier’s holes are slightly larger so that it can be removed without pulling out the pins from the lower carrier. A small radial ball bearing is installed in the top carrier to support the motor shaft. This way the shaft is supported on both ends – near the stator and the output of the gearbox.
+It is worth noting that the RL system has a pole at 𝑠 = − R/𝐿 .
 
-  Figure 4-14 Gearbox section in detail  48 50:9273888786   The central gear is press fitted on a specially designed shaft extension that is connected to the motor. This part is crucial, as the sun gear may slip under heavy loads if not mounted properly. The shaft is about 3.15mm in diameter and the contact height is 4.5mm, which corresponds to the contact area of roughly 44.5mm2. The peak torque that might be present on this shaft is 0.8Nm. This gives a shearing stress strength required to avoid slippage, of about 28Mpa. Even high strength compounds such as Loctite 620 (25Mpa after curation) would not be sufficient to fix the two parts together. The solution was to use a connection similar to a keyway connection. The shaft was milled with two tabs (keys), whereas the gear was milled with corresponding matching grooves. This way the tabs push against the grooves and form a strong connection. To prevent the weakening of the sun gear, the grooves were not milled all the way through, but only to half of its height.
+The series PI controller structure was used (4.2), as it allows for changing the loop gain only with 𝑘𝑝 gain and moving the zero location only with 𝑘𝑖 gain. This way, the zero of the PI controller can be placed near the RL system’s pole in order to simplify the system’s transfer function, and the loop gain can be varied independently.
 
- Below the gearbox there is the motor section (Figure 4-15). The motor’s stator is pressed onto the milled base part, whereas the rotor’s bearing is pressed into it. The original motor’s rotor is milled with four slots and the top surface is face-milled. The sun gear mount is screwed to the original rotor’s threaded holes. The back side of the rotor shaft is also milled in order to make room for the encoder magnet. A diametrically magnetized magnet with a 2mm hole is used. The rotor shaft has a hole as well. The magnet is placed on the shaft and centered on a 2mm pin placed in the hole with additional adhesive. The rotor can be removed even after fixing the magnet, as is the same diameter as the rotor shaft. Three stator wires are threaded through a slot and connected to the controller board.
+>    𝐺𝑃𝐼 (𝑧) = 𝑘𝑝 (1 +  𝑘𝑖 ) 𝑠  (4.2)
 
-  Figure 4-15 Motor section in detail 49 51:8378225453   The last section of the actuator is the controller section (Figure 4-16). The motor controller PCB is placed there and is covered by an aluminum cap. Four threaded holes made in the motor base are used to fix the controller PCB to the base with M2 screws. The PCB is placed in the center in order to align the encoder IC and the rotating magnet. The aluminum cap is used as a heatsink for the MOSFET transistors and the MOSFET driver, as well as for the motor.
+In order to cancel the RL system’s pole 𝑘𝑖 was derived as:
 
-  Figure 4-16 Controller section in detail All parts are connected with sixteen M3 screws, screwed to the distancing part. Outer shell parts are not equipped with any centering features, so there is a possibility of slight misalignment. These improvements could be added at a cost of a more complex machining process and thus increased cost. Overall, the module is very compact, which can be noticed in the section view depicted in Figure 4-17.
+>    𝑘𝑖 =  𝑅 / 𝐿  (4.3)
 
-  50 52:9579492667    Figure 4-17 Section view of the actuator Due to the specific application the actuators are going to be used in, there are additional output mounts used for rotating a special motor harness (hip motor), connecting two motors front to back (thigh motor) and driving a toothed belt (tibia motor) (Figure 4-18). These additional parts allow for a very compact design of a single leg actuation module presented in the last chapter.
+Substituting the QM5006 motor measured parameters the estimated 𝑘𝑖 is equal to 2875. This results in pole cancellation that can be observed on the zero-pole plot of the open loop system (Figure 4-5).
 
-  Figure 4-18 Different output mounts. a) mount for rotating a special actuator harness b) mount for rotating another actuator c) mount for driving a toothed belt Some parts were optimized to reduce the total actuator mass (Figure 4-19). The assumption was to keep a certain shell thickness and remove the rest of the redundant material.
+Figure 4-5 Pole - zero plot of the continuous open loop system – the left hand side pole is covered with PI controller’s zero
 
- This way, the module’s total mass was reduced by about 20 g.
+Having done the cancellation, the open loop system looks like an integrator (single pole at the origin):
 
-  51 53:7664552217    Figure 4-19 Parts milled with additional slots to make them lightweight 4.2.3  Manufacturing the actuator  Before the actuator parts were milled, it was printed on a FDM 3D printer to make sure the designed parts were matching the motor and gearbox elements. Moreover, the printed model allowed for finding any possible flaws that could influence the final prototype. The next step in manufacturing the actuator was milling the main parts of the module from aluminum stock. A homemade 3-axis CNC milling machine was used (Figure 4-20).
+>    𝐺𝑜𝑝𝑒𝑛 = 𝑘𝑝 (1 +  𝑘𝑝 𝑘𝑖 1 )∙ ⇒ 𝑅 𝐺𝑜𝑝𝑒𝑛 = 𝑠 𝐿𝑠 + 𝑅 (𝑘 = ) 𝐿𝑠 𝑖  (4.4)
 
-  Figure 4-20 Homemade CNC machine 52 54:7564973745   The machine runs on a LinuxCNC operating system and has a 280x300x150 mm working area. Thanks to a rigid construction, precision linear rails and ball screws, it is capable of maintaining high precision milling in aluminum, enough for press-fitting bearings or shafts.
+The next step is to calculate the 𝑘𝑝 gain. To do that, the closed loop system transfer function is obtained:
 
- The G-codes were generated using Fusion 360 and then imported into Axis - LinuxCNC control program running on the machine itself.
+>    𝐺𝑐𝑙𝑜𝑠𝑒𝑑 = The  𝑘𝑝 𝐿  𝑘𝑝 𝑘𝑝 + 𝐿𝑠  (4.5)
 
- The PA6 2017 T4511 aluminum alloy was selected as it has good mechanical properties and can be milled easily. The material was purchased in cylinder slices of different heights and diameters. Each stock was cut with a 1mm margin on each side for the surface facing purposed, due to poor surface finish after cutting the cylinder with a band-saw. All slices were mounted on the plywood table using M3 screws and planned using a 6 mm carbide flat endmill.
+The 𝑘𝑝 / 𝐿 term is substituted with 𝑝 for simplification, and 𝑠 is substituted with 𝑗𝜔 to calculate the  magnitude of system’s response at certain corner frequency. The 𝐺(𝑗𝜔) is multiplied with its conjugate and square root of this expression is taken:
 
-  Figure 4-21 Face-milled cylinder slice After face milling, each slice was mounted on the table of a milling machine and further operations were conducted. To save time spent on tool changes and offset measurements, three instances of a single part were milled in one process using multiple work offsets (G54, G55, G56).
+>    |𝐺(𝑗𝜔)| = √𝐺(𝑗𝜔) ∙ 𝐺(𝑗𝜔)′ = ( ) 𝜔2 1+ 2 𝑝  (4.6)
 
-  53 55:6223247929    Figure 4-22 Three instances of the same part milled using multiple work offsets The remaining material was used to mill small parts such as the sun gear mount. Milling grooves inside the sun gear was carried out in a precision vice that held the gear firmly.
+Next, the magnitude is converted to dBs:
 
- If the part required flipping between proceeding milling stages, the plywood table was milled with a centring shape to keep the part in the centre of the actual reference frame. The most complicated part, requiring flipping, was the connector part between the two actuators (Figure 4-23)  Figure 4-23 The most complicated part of the module, requiring many CNC milling stages as well as flipping the part during the process. See Appendix 4 for a time-lapse CNC milling video The motor was modified to fit into the module. The stator was taken off the aluminum housing, which required pushing off the rotor bearings and milling the housing from the inside to loosen the stator. This process was inevitable, as the stator is delicate and it could not be 54 56:1712685303   pushed off the housing without damage. The rotor was modified by face-milling it’s top surface and milling four slots in order to reduce the weight. The motor shaft was shortened to make room for the encoder magnet.
+>    20 log(|𝐺(𝑗𝜔)|) = −10log (1 +  𝜔2 ) 𝑝2  (4.7)
 
-  Figure 4-24 Rotor before and after milling the slots After milling the individual parts, the module was assembled. First, the stator base was covered with Kapton tape to isolate the windings from the aluminum part in case the enamel was scraped off. The stator pinion and stator itself were covered with Loctite compound and pressed together.
+The corner frequency for a closed loop system is defined as the frequency at which the frequency response is reduced by 3dBs. If we assume 𝑝 is equal to 𝜔 the (4.7) expression yields -3dBs. As 𝑝 is really a substitution for  𝑘𝑝 𝐿  then it is possible to state that:
 
-  Figure 4-25 motor shaft with two lobes and the sung gear milled with corresponding grooves Then the main rotor bearing was pressed into the motor base. Afterwards, the encoder magnet was glued to the rotor shaft and centered by pressing a 2 mm steel pin. The controller was screwed to the base, thermal conductive pads were applied on the transistors and the driver, and the cap was placed over it. The whole module was screwed to the distancing part. The gearbox was assembled by placing the internal gear and pressing the bearings into the gearbox aluminum housing. Steel pins were pressed to the holes in the lower planet carrier. The gears were installed, the sun gear was pressed onto the motor shaft extension and then screwed to the 55 57:3516092826   rotor. Finally, the gearbox housing was screwed to the distancing part with eight M3 screws.
+>    𝑘𝑝 = 𝐿 ∙ 𝜔𝑐𝑜𝑟𝑛𝑒𝑟  (4.8)
 
- The assembled module is presented in Figure 4-26  Figure 4-26 Fully assembled actuator  4.3 Electrical 4.3.1  Controller electrical requirements  The main purpose of the 3-phase motor controller is to run field oriented control algorithm. To do that, the module has to be equipped with a microcontroller, three half-bridges, a position sensor, and current sensors. Moreover, the module has to be able to communicate with a master controller through a high speed communication bus. In addition, the controller should fit into the motor module case. These requirements impose some restrictions on component sizes and the maximum power the controller will be able to handle.
+Again for the motor used in this thesis 𝑘𝑝 is equal to 0.502 for corner frequency of 2kHz. The corner frequency can be increased, however, one must be aware of possible side effects such as audible noise due to amplified sensor noise.
 
- Maximum phase current and maximum supply voltage are usually the first parameters a motor controller is described with. At the time when the first prototype of the controller PCB was designed, it was not known what is the saturation current for the chosen motor (QM5006).
+It is clear that any motor parameters identification errors contribute to change in the computed gains. Even though, the presented PI controller tuning process allows for more accurate gains estimation than it would have been by manual tuning.
 
- This way, the maximum phase current (limited by the MOSFET transistors) was estimated with a certain margin. The torque constant of QM5006 is equal to 0.028 Nm/A. If we assume the maximum torque on the motor shaft cannot exceed 0.8 Nm, it is possible to estimate the phase current at that torque 0.8 𝑁𝑚 ÷ 0.028  𝑁𝑚 𝐴  ≈ 29 𝐴. This calculation does not take into account  the saturation effects likely to happen at currents this high, so the real torque is expected to be 56 58:3592773427   reduced. Moreover, the resistive power loss (Joule heating) at 29 A and 0.115 Ω phase resistance is going to be roughly 145 W, leading to rapid motor heating. Having determined the maximum allowed phase current, it is essential to know the maximum supply voltage as it influences the MOSFET transistors choice as well as power supply distribution components.
+In order to validate the designed controller in time domain, the step response of the system was plotted (Figure 4-6).
 
- The maximum supply voltage was chosen to be 24 V, however a certain safety margin was also considered.
+Figure 4-6 Step response of the continuous time system
 
- Knowing the maximum phase current and supply voltage is a good starting point for choosing appropriate MOSFET transistors. Small area on the PCB dedicated for the transistors narrowed down the available package options to only a few. Eventually, a Vishay PowerPAK 1212-8 was chosen. This package is superior as the manufacturer produces a variety of transistors with different parameters in the same case. In case of any modifications regarding the maximum current or voltage, it is easier to change only the transistors without influencing the PCB layout. Finally, the SISA88DN was selected. The transistor features a maximum drainsource voltage of 30V and a maximum continuous drain current (ID) of 40.5 A. Moreover, it has a relatively low total gate charge (Qg) – 8.3 nC, which directly influences the time it takes for the MOSFET to go into the full conduction state. The channel resistance in the on state is low (Rdson = 0.0067 Ω), resulting in low resistance loss when the transistor is conducting. The dimensions of a single transistor are only 3.3x3.3x1.0 mm.
+As can be seen the response is very dynamic, and no overshoot is present. The setpoint is reached after roughly 500us.
+
+The corner frequency was validated by drawing the bode plot of the open loop system (Figure 4-7). The intersection of an open loop frequency response and the 0 dB line is equal to the open loop crossover frequency, i.e., the corner frequency of the closed loop system [19].
+
+Figure 4-7 Continuous time open loop bode plot
+
+By analyzing the frequency and phase response of the open loop system, it is possible to find the stability margins of the closed loop system. In this case, the gain margin is infinite (the phase never reaches -180°) and the phase margin is equal to 90°. The crossover frequency is equal to the desired one (2kHz).
+
+For the sake of completeness and validation, a similar tuning process was carried out in the Z-domain by finding the discrete time equivalents of the continuous functions presented earlier. The goal was to compare the continuous and discrete time systems. The transformation form continuous to discrete time was carried out with zero order hold (ZOH) method:
+
+>    𝐺 ∗ (𝑧) =  𝑧 − 1 𝐺(𝑠) 𝒵[ ] 𝑧 𝑠  (4.9)
+
+Having done the tuning process in the Z-domain, equivalent discrete time gains were found:
+
+>    𝑅𝑇  1 − 𝑒− 𝐿 𝑘𝑖 = 𝑇 𝑘𝑝 =  (4.10)  
+>    𝑅𝜔𝑐  𝑅𝑇  1 − 𝑒− 𝐿   (4.11)
+
+By substituting the motor parameters, corner frequency (𝑟𝑎𝑑𝑖𝑎𝑛𝑠/ 𝑠𝑎𝑚𝑝𝑙𝑒) and sampling time (25μs), the following gains were found: 𝑘𝑝 = 0.520, 𝑘𝑖 = 2774.
+
+Table 4-1 Discrete and continuous gains comparison
+
+Continuous  
+Discrete (T = 25μs)  
+𝑘𝑝  0.503  0.520  
+𝑘𝑖  2875  2774  
+
+The discrete time system was examined in a similar way as the continuous one and the results were compared.
+
+Figure 4-8 Step response of the discrete time system
+
+The discrete step response (Figure 4-8) is very similar to the continuous time one. A slight difference can be seen in the settle time, however not a significant one.
+
+Figure 4-9 Discrete time open loop Bode plot
+
+On the other hand, the discrete Bode plot is quite different from the previous continuous time one. There is a clearly visible phase drop that is increasing with the frequency approaching the sampling frequency. This is a natural feature of discrete time systems, due to nonzero sampling period. The discrete system has roughly 80° of phase margin, so eventually it may become unstable, unlike the ideal continuous time counterpart. The gain margin is equal to 16.8 dB.
+
+4.1.2  Simulation results
+
+The GECKOCircuits simulation was created in order to validate the field oriented control implementation. First, it was essential to validate if the closed loop current control system is performing as expected. The PI controller gains were set according to the continuous time system (second column of Table 4-1) and the motor parameters were set according to the QM5006 motor measured values. The virtual motor was stalled by setting a high friction coefficient and a current step was commanded in the q axis. The resulting response was recorded (Figure 4-10)
+
+Figure 4-10 Simulated current step response
+
+The recorded response is almost identical with the responses from Figure 4-6 and Figure 4-8. The settle time is again about 500us. Having checked the current controllers implementation, it was possible to validate other factors.
+
+Figure 4-11 presents the motor line-to-line voltages and phase currents. The SVPWM modulation is clearly visible in the voltage waveforms, whereas the currents are purely sinusoidal. To actually observe the currents, the motor had to be loaded with an external constant torque. In this case, 0.5 Nm was applied and the motor was rotated in the direction counteracting the external torque.
+
+Figure 4-11 Line to line motor voltages and the corresponding phase currents
+
+The next step was to determine the transient behaviour when the motor was rapidly changing the direction of rotation. This experiment was divided into two simulation rounds – with and without d/q axis decoupling.
+
+Figure 4-12 Currents in d and q axis when sudden change of rotation direction occurs. The decoupling effect is indicated by the red circle.
+
+There are four quantities visible in Figure 4-12: d set/q set which, correspond to the commanded currents in d and q axis, respectively, and d read/q read which correspond to the measured currents. It is crucial to note that the motor is spinning freely, i.e., it is not loaded with external torque. This is why the q axis current is not reaching the setpoint current value as it is constrained by the maximum motor rotational velocity and cannot accelerate further to keep the setpoint current. The test cycle is started by commanding a positive q axis current. The motor accelerates to its maximum speed, the measured q axis current decreases and after about 80 ms the q axis commanded current is reversed. This causes the motor to deaccelerate rapidly and accelerate in the opposite direction. It is this exact moment, when the d axis current is affected by the coupling term −𝜔𝐿𝑞 𝐼𝑞 from equation (3.6).
+
+In the coupled case (upper part of Figure 4-12) the d axis current is explicitly affected by the q current change. However, with decoupling implemented by introducing feedforward terms, the axes should become independent. This can be observed on the lower part of Figure 4-12. The influence of q axis current on the d axis was mitigated. The decoupling is especially crucial when dealing with high inductance motors. In this case it could be omitted, however, for the sake of completeness and universality the controller is able to perform d/q axis decoupling based on measured inductance values.
+
+The simulated waveforms served as a reference for further software implementation on real hardware and allowed for finding possible flaws and controller misbehaviours.
+
+## 4.2 Mechanical
+
+### 4.2.1  Motor selection
+
+The assumption was to use only low cost hobby brushless motors. To make the module as packed as possible, it was essential to pick a motor with a low profile and the largest possible stator diameter, below 45 mm. The last restriction was dictated by the size of the gearbox and its load capacity. Initially, three motors were chosen - Sunnysky X4108s [I14], QM5006 [I15], and Turnigy 4822 [I16]. Then the motors were compared based on the available parameters. The KV parameter and phase resistance were used to estimate the motor constant, which is the best metric to compare motors with each other. Equation (4.12) is the formula that was used for torque constant derivation:
+
+>    𝐾𝑡 =  3 1 60 1 ∙ ∙ ∙ 2 √3 2𝜋 𝐾𝑉 45  47:1051837796  (4.12)
+
+where 3/2 factor indicates a sinusoidal motor is considered, 1/√3 is for transforming between line to line and phase quantities and 60/2𝜋 is used for converting rpm to rad/s. When phase resistance is known, it is possible to calculate the motor constant:
+
+>    𝐾𝑚 =  𝐾𝑡/√𝑅  (4.13)
+
+Both read and estimated parameters are listed in Table 4-2.
+
+Table 4-2 Motor comparison
+
+Parameter Sunnysky X4108s QM5006 Turningy 4822
+Outer diameter (mm)  46.1  47.5  47.5
+Mass (g)  113  87  100
+Height (mm)  25.5  20  25
+KV rating  380  350  690
+Pole pairs  12  14  11
+Torque constant (Nm/A)  0.0217  0.0236  0.0119
+Motor constant (Nm/√W)  0.0440  0.0492  0.0371
+Motor constant per 1 gram of motor mass  0.00039  0.00057  0.00037
+Phase resistance ()  0.122  0.117  0.052
+Price (USD $)  24.7  25.0  32.3
+
+Presenting a superior motor constant, lower price, and lowest profile height among other motors, the QM5006 motor was chosen. After purchasing, the motor was tested if the estimated parameters match the real measured values. The motor was spun with an electric drill and the resultant line-to-line bEMF voltage signal was recorded. The KV parameter was estimated from the frequency and peak-to-peak voltage. Then the phase resistance was obtained by measuring the voltage drop across the two phases with a known current flowing through them. The measured parameters are listed in Table 4-3.
+
+Table 4-3 Comparison between specification sheet and measured motor parameters
+
+Parameter Specification (estimated) Measured
+Outer diameter (mm)  47.5  47.6
+Mass (g)  87  92
+Height (mm)  20  20.1
+KV rating  350  293
+Torque constant (Nm/A)  0.0236  0.028
+Motor constant (Nm/√W)  0.0492  0.056
+Motor constant per 1 gram of motor mas  0.00057  0.00037
+Phase resistance ()  0.117  0.1153
+
+There is a slight difference in the measured and estimated values of torque constant and motor constant. This might be the result of different magnet strength or inaccurate data posted in the motor specification. Additionally, the shape of the induced bEMF voltage signal was found to be sinusoidal, which indicates the motor is PMSM type. This was a desired feature as it works in favor when FOC control algorithm is used.
+
+### 4.2.2  3D model
+
+The main assumption was to create a lightweight actuator, robust to possible impacts and resistant to higher temperatures generated by the loaded brushless motor. Aluminum was chosen as the main structural material, as it is relatively lightweight, is not susceptible to elevated temperatures, and can be milled easily. It is also cheap, easily accessible and can be purchased in a convenient form for milling. The actuator was designed in SolidWorks environment. Existing parts such as motor and the gearbox were measured and modelled, whereas the others were made from scratch in the SolidWorks program.
+
+Figure 4-13 Exploded view of the actuator
+
+The gearbox consists of the internal gear, planet gears with pins, a central sun gear, two aluminum parts serving as planet carriers, two thin-wall bearings, and the outer shell (Figure 4-14). The 4.5:1 gear ratio gearbox is designed in such a way it can be removed as a whole and replaced. This is especially useful when any type of failure occurs. The internal gear has four tabs that are used for locking the gear in the gearbox shell part. Two bearings are press-fitted into the aluminum gearbox housing. Planet gears are rotating on three stainless steel pins, which are pressed fitted into the lower planet carrier. The top carrier’s holes are slightly larger so that it can be removed without pulling out the pins from the lower carrier. A small radial ball bearing is installed in the top carrier to support the motor shaft. This way the shaft is supported on both ends – near the stator and the output of the gearbox.
+
+Figure 4-14 Gearbox section in detail
+
+The central gear is press fitted on a specially designed shaft extension that is connected to the motor. This part is crucial, as the sun gear may slip under heavy loads if not mounted properly. The shaft is about 3.15mm in diameter and the contact height is 4.5mm, which corresponds to the contact area of roughly 44.5mm2. The peak torque that might be present on this shaft is 0.8Nm. This gives a shearing stress strength required to avoid slippage, of about 28Mpa. Even high strength compounds such as Loctite 620 (25Mpa after curation) would not be sufficient to fix the two parts together. The solution was to use a connection similar to a keyway connection. The shaft was milled with two tabs (keys), whereas the gear was milled with corresponding matching grooves. This way the tabs push against the grooves and form a strong connection. To prevent the weakening of the sun gear, the grooves were not milled all the way through, but only to half of its height.
+
+Below the gearbox there is the motor section (Figure 4-15). The motor’s stator is pressed onto the milled base part, whereas the rotor’s bearing is pressed into it. The original motor’s rotor is milled with four slots and the top surface is face-milled. The sun gear mount is screwed to the original rotor’s threaded holes. The back side of the rotor shaft is also milled in order to make room for the encoder magnet. A diametrically magnetized magnet with a 2mm hole is used. The rotor shaft has a hole as well. The magnet is placed on the shaft and centered on a 2mm pin placed in the hole with additional adhesive. The rotor can be removed even after fixing the magnet, as is the same diameter as the rotor shaft. Three stator wires are threaded through a slot and connected to the controller board.
+
+Figure 4-15 Motor section in detail
+
+The last section of the actuator is the controller section (Figure 4-16). The motor controller PCB is placed there and is covered by an aluminum cap. Four threaded holes made in the motor base are used to fix the controller PCB to the base with M2 screws. The PCB is placed in the center in order to align the encoder IC and the rotating magnet. The aluminum cap is used as a heatsink for the MOSFET transistors and the MOSFET driver, as well as for the motor.
+
+Figure 4-16 Controller section in detail
+
+All parts are connected with sixteen M3 screws, screwed to the distancing part. Outer shell parts are not equipped with any centering features, so there is a possibility of slight misalignment. These improvements could be added at a cost of a more complex machining process and thus increased cost. Overall, the module is very compact, which can be noticed in the section view depicted in Figure 4-17.
+
+Figure 4-17 Section view of the actuator
+
+Due to the specific application the actuators are going to be used in, there are additional output mounts used for rotating a special motor harness (hip motor), connecting two motors front to back (thigh motor) and driving a toothed belt (tibia motor) (Figure 4-18). These additional parts allow for a very compact design of a single leg actuation module presented in the last chapter.
+
+Figure 4-18 Different output mounts. a) mount for rotating a special actuator harness b) mount for rotating another actuator c) mount for driving a toothed belt
+
+Some parts were optimized to reduce the total actuator mass (Figure 4-19). The assumption was to keep a certain shell thickness and remove the rest of the redundant material. This way, the module’s total mass was reduced by about 20 g.
+
+Figure 4-19 Parts milled with additional slots to make them lightweight
+
+### 4.2.3  Manufacturing the actuator
+
+Before the actuator parts were milled, it was printed on a FDM 3D printer to make sure the designed parts were matching the motor and gearbox elements. Moreover, the printed model allowed for finding any possible flaws that could influence the final prototype. The next step in manufacturing the actuator was milling the main parts of the module from aluminum stock. A homemade 3-axis CNC milling machine was used (Figure 4-20).
+
+Figure 4-20 Homemade CNC machine
+
+The machine runs on a LinuxCNC operating system and has a 280x300x150 mm working area. Thanks to a rigid construction, precision linear rails and ball screws, it is capable of maintaining high precision milling in aluminum, enough for press-fitting bearings or shafts. The G-codes were generated using Fusion 360 and then imported into Axis - LinuxCNC control program running on the machine itself.
+
+The PA6 2017 T4511 aluminum alloy was selected as it has good mechanical properties and can be milled easily. The material was purchased in cylinder slices of different heights and diameters. Each stock was cut with a 1mm margin on each side for the surface facing purposed, due to poor surface finish after cutting the cylinder with a band-saw. All slices were mounted on the plywood table using M3 screws and planned using a 6 mm carbide flat endmill.
+
+Figure 4-21 Face-milled cylinder slice
+
+After face milling, each slice was mounted on the table of a milling machine and further operations were conducted. To save time spent on tool changes and offset measurements, three instances of a single part were milled in one process using multiple work offsets (G54, G55, G56).
+
+Figure 4-22 Three instances of the same part milled using multiple work offsets
+
+The remaining material was used to mill small parts such as the sun gear mount. Milling grooves inside the sun gear was carried out in a precision vice that held the gear firmly.
+
+If the part required flipping between proceeding milling stages, the plywood table was milled with a centring shape to keep the part in the centre of the actual reference frame. The most complicated part, requiring flipping, was the connector part between the two actuators (Figure 4-23)
+
+Figure 4-23 The most complicated part of the module, requiring many CNC milling stages as well as flipping the part during the process. See Appendix 4 for a time-lapse CNC milling video
+
+The motor was modified to fit into the module. The stator was taken off the aluminum housing, which required pushing off the rotor bearings and milling the housing from the inside to loosen the stator. This process was inevitable, as the stator is delicate and it could not be pushed off the housing without damage. The rotor was modified by face-milling it’s top surface and milling four slots in order to reduce the weight. The motor shaft was shortened to make room for the encoder magnet.
+
+Figure 4-24 Rotor before and after milling the slots
+
+After milling the individual parts, the module was assembled. First, the stator base was covered with Kapton tape to isolate the windings from the aluminum part in case the enamel was scraped off. The stator pinion and stator itself were covered with Loctite compound and pressed together.
+
+Figure 4-25 motor shaft with two lobes and the sung gear milled with corresponding grooves
+
+Then the main rotor bearing was pressed into the motor base. Afterwards, the encoder magnet was glued to the rotor shaft and centered by pressing a 2 mm steel pin. The controller was screwed to the base, thermal conductive pads were applied on the transistors and the driver, and the cap was placed over it. The whole module was screwed to the distancing part. The gearbox was assembled by placing the internal gear and pressing the bearings into the gearbox aluminum housing. Steel pins were pressed to the holes in the lower planet carrier. The gears were installed, the sun gear was pressed onto the motor shaft extension and then screwed to the rotor. Finally, the gearbox housing was screwed to the distancing part with eight M3 screws. The assembled module is presented in Figure 4-26
+
+Figure 4-26 Fully assembled actuator
+
+## 4.3 Electrical
+
+### 4.3.1  Controller electrical requirements
+
+The main purpose of the 3-phase motor controller is to run field oriented control algorithm. To do that, the module has to be equipped with a microcontroller, three half-bridges, a position sensor, and current sensors. Moreover, the module has to be able to communicate with a master controller through a high speed communication bus. In addition, the controller should fit into the motor module case. These requirements impose some restrictions on component sizes and the maximum power the controller will be able to handle.
+
+Maximum phase current and maximum supply voltage are usually the first parameters a motor controller is described with. At the time when the first prototype of the controller PCB was designed, it was not known what is the saturation current for the chosen motor (QM5006). This way, the maximum phase current (limited by the MOSFET transistors) was estimated with a certain margin. The torque constant of QM5006 is equal to 0.028 Nm/A. If we assume the maximum torque on the motor shaft cannot exceed 0.8 Nm, it is possible to estimate the phase current at that torque 0.8 𝑁𝑚 ÷ 0.028  𝑁𝑚/𝐴  ≈ 29 𝐴. This calculation does not take into account  the saturation effects likely to happen at currents this high, so the real torque is expected to be reduced. Moreover, the resistive power loss (Joule heating) at 29 A and 0.115 Ω phase resistance is going to be roughly 145 W, leading to rapid motor heating. Having determined the maximum allowed phase current, it is essential to know the maximum supply voltage as it influences the MOSFET transistors choice as well as power supply distribution components. The maximum supply voltage was chosen to be 24 V, however a certain safety margin was also considered.
+
+Knowing the maximum phase current and supply voltage is a good starting point for choosing appropriate MOSFET transistors. Small area on the PCB dedicated for the transistors narrowed down the available package options to only a few. Eventually, a Vishay PowerPAK 1212-8 was chosen. This package is superior as the manufacturer produces a variety of transistors with different parameters in the same case. In case of any modifications regarding the maximum current or voltage, it is easier to change only the transistors without influencing the PCB layout. Finally, the SISA88DN was selected. The transistor features a maximum drainsource voltage of 30V and a maximum continuous drain current (ID) of 40.5 A. Moreover, it has a relatively low total gate charge (Qg) – 8.3 nC, which directly influences the time it takes for the MOSFET to go into the full conduction state. The channel resistance in the on state is low (Rdson = 0.0067 Ω), resulting in low resistance loss when the transistor is conducting. The dimensions of a single transistor are only 3.3x3.3x1.0 mm.
 
  In order to switch the transistors very fast, it is essential to use a dedicated driver IC. A Texas Instruments DRV8323RS “smart” driver dedicated for brushless motor control was chosen. It is described “smart” as it supervises the PWM signals being applied on the half bridges and does not allow for a shoot-through, automatically adjusts dead-time and detects any MOSFET faults immediately stopping the commutation process. The driver allows for changing many drive parameters such as gate charge current, additional dead-time, PWM modes, and many more. Moreover, it is equipped with a buck regulator that can be used for powering the microcontroller from the main DC bus. Three built-in operational amplifiers are dedicated to reading the phase currents from shunt resistors, so that no external components are required.
 
