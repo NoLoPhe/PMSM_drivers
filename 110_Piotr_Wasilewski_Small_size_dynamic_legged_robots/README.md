@@ -1,4 +1,5 @@
 Link: https://pwwprojects.blogspot.com/2021/10/my-bachelors-thesis-brushless-actuator.html
+Link: file:///D:/robot/Piotr_Wasilewski_bachelors_thesis.pdf
 
 # SUBJECT: A STAND-ALONE BRUSHLESS ACTUATOR FOR SMALL-SIZE DYNAMIC LEGGED ROBOTS  
 
