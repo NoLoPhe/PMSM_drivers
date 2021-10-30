@@ -28,6 +28,8 @@ The mechanical design and actuation approach taken with the Mini Cheetah largely
 
 Mini Cheetah uses identical modular actuators on every degree of freedom. A similar approach was used in the quadruped ANYmal, with the series-elastic ANYdrive actuator [6]. Each actuator contains an electric motor, singlestage planetary transmission, and power electronics. Using identical, self-contained actuators at each degree of freedom simplifies robot design, allows for easy repairs and modification of the robot, and lowers cost because of the number of identical parts. The design and performance of these actuators is discussed in detail in Section III.
 
+Fig. 2: The robot can easily reach a wide range of orientations without moving its feet, thanks to the large range of motion at every joint
+
 ### B. Mechanical Design
 
 The robot’s four identical legs were designed to maximize range of motion while minimizing limb mass and inertia. The actuators have sufficient internal bearings for the three degrees of freedom to be serially attached with no additional support structure, which would add weight and limit range of motion. The hip and knee motors are located co-axially at the hip, to minimize the moment of inertia. Torque is transmitted to the knee joint through a Gates Poly Chain belt transmission which provides an additional 1.55:1 gear-up.
