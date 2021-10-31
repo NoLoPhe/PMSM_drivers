@@ -1,5 +1,6 @@
-Link: https://dspace.mit.edu/handle/1721.1/118671
-Link: https://www.robotdigg.com/product/1667/MIT-Robot-Dog-high-torque-Joint-Motor-or-DD-Motor
+- Link: https://dspace.mit.edu/handle/1721.1/118671
+- Link: https://www.robotdigg.com/product/1667/MIT-Robot-Dog-high-torque-Joint-Motor-or-DD-Motor
+- Link: file:///D:/robot/MIT%E7%89%88%E9%A9%B1%E5%8A%A8%20HT-04%E7%94%B5%E6%9C%BA/A%20Low%20Cost%20Modular%20Actuator%20for%20Dynamic%20Robots.pdf
 
 # A Low Cost Modular Actuator for Dynamic Robots
 
