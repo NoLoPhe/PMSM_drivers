@@ -79,6 +79,8 @@ The open-loop output torque bandwidth of an actuator with the output locked is r
 
 Two possible scenarios are as follows: Compliance between the output of the transmission and the robot link, like an SEA; and compliance between the robot link and the world, as illustrated in Figure 6. In both cases, the rotor has inertia J1, the compliance has a stiffness K, the output link has an inertia J2, and there is a transmission of ratio N between the input and output of the transmission. The output link collides with the world at angular velocity ω, with the point of contact coming to an instantaneous stop.
 
+Fig. 6: Two cases for compliance. Left: Case 1, compliance between transmission output and link (SEA). Right: Case 2, compliance between the link and the world.
+
 Peak forces are seen in the transmission when the kinetic energy stored in the rotor (and of the link, in Case 2) has been completely transferred to potential energy stored in the compliance. At this point, the compliant element will deflect to angle K, and peak force at the input of the transmission for Case 1, 2 respectively will be:
 
 The natural frequencies of the two systems are:
