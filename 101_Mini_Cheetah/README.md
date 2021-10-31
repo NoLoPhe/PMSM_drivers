@@ -98,12 +98,19 @@ Worth noting, the peak torque tolerable by the transmission is significantly gre
 Actuator specifications are summarized in Table I
 
 Mass 440g
+
 Dimensions 96 mm O.D., 40 mm axial length
+
 Maximum Torque 17 N m
+
 Continuous Torque 6.9 N m
+
 Maximum Output Speed 40 rad/s@24 volts
+
 Maximum Output Power +250/ − 680watts
+
 Current Control Bandwidth 4.5kHz@4.5N m, 1.5kHz@17N m
+
 Output Inertia 0.0023 kg m2
 
 The efficiency of the planetary gearbox was measured with a torque sensor on the output of the actuator. Gear and bearing friction was observed be dependent on torque and rotation direction, with negligible speed dependence within the operating range of the actuator. The gear and bearing friction is well modeled by the following expression:
